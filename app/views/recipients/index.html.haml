@@ -1,0 +1,65 @@
+- flash.each do |key, value|
+  %div{class: "alert alert-#{key == 'notice' ? 'success' : key} alert-block fade in"}
+    %button.close.close-sm{"data-dismiss" => "alert", type: "button"}
+      %i.icon-remove
+    = value
+%section.panel
+  .panel-body.progress-panel
+    .task-progress
+      %h1{ 'style' => 'font-size:30px'}= @recipient_group.name
+      %p LIST OF RECIPIENTS IN THIS GROUP
+    .task-option
+      %a.btn.btn-default.btn-shadow.tooltips{"data-href" => recipient_group_new_modal_path(recipient_group_id: params[:recipient_group_id]), "data-placement" => "left", "data-target" => "#newModal", "data-title" => "Add new recipient", "data-toggle" => "cmodal", href: "#newModal"}
+        Add New Recipient
+      = link_to 'Back', recipient_groups_path, title: 'Back', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', class: "btn btn-white btn-shadow tooltips"
+
+    %table.table.table-hover.personal-task
+      %thead
+        %tr
+          %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"} FULL NAME
+          %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"} DESIGNATION
+          %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"} DEPARTMENT
+          %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"} EMAIL
+          %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"}
+      %tbody
+        - @recipients.each do |recipient|
+          %tr
+            %td= recipient.full_name
+            %td= recipient.designation
+            %td= recipient.department
+            %td= recipient.email_to
+            %td{ align: 'right' }
+              /= link_to 'Show', recipient_group
+
+              %a.btn.btn-xs.btn-white.tooltips{"data-href" => edit_modal_recipient_group_recipient_path(params[:recipient_group_id], recipient), "data-placement" => "bottom", "data-target" => "#editModal", "data-title" => "Edit Recipient Detail", "data-toggle" => "cmodal", href: "#editModal"}
+                %i.icon-edit{style: "color: #61a642"}
+              = link_to recipient_group_recipient_path(params[:recipient_group_id], recipient),
+                title: 'Delete', 
+                'data-toggle' => 'tooltip', 'data-placement' => 'left',
+                :method => :delete, :data => { :confirm => 'Are you sure?' },
+                class: "btn btn-xs btn-danger tooltips" do
+                %i.icon-trash{:style => "color: white"}
+
+    %div{ align: "center" }
+      = will_paginate @recipients
+
+    #editModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "editModalLabel", role: "dialog", tabindex: "-1"}
+      .modal-dialog
+        .modal-content
+          .modal-header
+            %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+            %h4.modal-title
+              %i.icon-group{style: "color: #FF6C60; font-size: 26px; padding-right: 10px"}
+              Edit Recipient Detail
+          #testTarget.modal-body
+            Loading...
+    #newModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "newModalLabel", role: "dialog", tabindex: "-1"}
+      .modal-dialog
+        .modal-content
+          .modal-header
+            %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+            %h4.modal-title
+              %i.icon-group{style: "color: #FF6C60; font-size: 26px; padding-right: 10px"}
+              Add New Recipient
+          #testTarget.modal-body
+            Loading...

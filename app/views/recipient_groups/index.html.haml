@@ -1,0 +1,87 @@
+- flash.each do |key, value|
+  - case key
+  - when 'notice'
+    - @key = 'info'
+    - @sign = 'icon-info-sign'
+  - when 'error'
+    - @key = 'danger'
+    - @sign = 'icon-warning-sign'
+  - else
+    - @key = key
+    - @sign = 'icon-ok-sign'
+  %div{class: "alert alert-#{@key} alert-block fade in"}
+    %button.close.close-sm{"data-dismiss" => "alert", type: "button"}
+      %i.icon-remove
+    %h4
+      %i{class: @sign}
+      = key.sub(/^(\w)/) {|s| s.capitalize}
+    %p= value
+%section.panel
+  .panel-body.progress-panel
+    .task-progress
+      %h1{ 'style' => 'font-size:30px'} RECIPIENTS GROUPS
+      %p LIST OF RECIPIENTS GROUPS 
+    .task-option
+      %a.btn.btn-default.btn-shadow.tooltips{"data-href" => recipient_groups_new_modal_path, "data-placement" => "left", "data-target" => "#newModal", "data-title" => "Create new recipient group", "data-toggle" => "cmodal", href: "#newModal"}
+        New Recipient Group
+
+    %table.table.table-hover.personal-task
+      %thead
+        %tr
+          %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"} GROUP NAME
+          %th{:style=>"border-bottom: 1px;font-weight: normal;width: 30%; color: #39b5aa"} DESCRIPTION
+          %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"} NO. OF RECIPIENT #
+          %th{:style=>"border-bottom: 1px;font-weight: normal;width: 30%; color: #39b5aa"}
+
+      %tbody
+        - if @recipient_groups.count == 0 
+          %tr
+            %td{colspan: '5', style: 'text-align: center; font-weight:300; font-size: 50px; color: lightgrey;padding-top: 40px;padding-bottom:40px'} 
+              %i.icon-info-sign{style: 'font-size: 50px; color: lightgrey'}
+              You don't have any recipient group
+        - else
+          - @recipient_groups.each do |recipient_group|
+            %tr
+              %td= recipient_group.name
+              %td= recipient_group.description
+              %td
+                %p{ style: "margin-left: 25px"}= recipient_group.recipients.count
+              %td{ align: 'right' }
+                /= link_to 'Show', recipient_group
+                = link_to recipient_group_recipients_path(recipient_group), title: 'Add/View recipients in this group', 
+                  'data-toggle' => 'tooltip', 'data-placement' => 'left', 
+                  class: "btn btn-xs btn-white tooltips" do
+                  %i.icon-plus{:style => "color: #8075c4"}
+                %a.btn.btn-xs.btn-white.tooltips{"data-href" => "#{edit_modal_recipient_group_path(recipient_group)}", "data-placement" => "bottom", "data-target" => "#editModal", "data-title" => "Edit Recipient Group", "data-toggle" => "cmodal", href: "#editModal"}
+                  %i.icon-edit{style: "color: #61a642"}
+                = link_to recipient_group,
+                  title: 'Delete', 
+                  'data-toggle' => 'tooltip', 'data-placement' => 'left',
+                  :method => :delete, :data => { :confirm => 'Are you sure?' },
+                  class: "btn btn-xs btn-danger tooltips" do
+                  %i.icon-trash{:style => "color: white"}
+
+    %div{ align: "center" }
+      = will_paginate @recipient_groups
+
+    #editModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "editModalLabel", role: "dialog", tabindex: "-1"}
+      .modal-dialog
+        .modal-content
+          .modal-header
+            %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+            %h4.modal-title
+              %i.icon-group{style: "color: #FF6C60; font-size: 26px; padding-right: 10px"}
+              Edit Recipient Group
+          #testTarget.modal-body
+            Loading...
+    #newModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "newModalLabel", role: "dialog", tabindex: "-1"}
+      .modal-dialog
+        .modal-content
+          .modal-header
+            %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+            %h4.modal-title
+              %i.icon-group{style: "color: #FF6C60; font-size: 26px; padding-right: 10px"}
+              New Recipient Group
+          #testTarget.modal-body
+            Loading...
+                      

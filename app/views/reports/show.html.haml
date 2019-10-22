@@ -1,0 +1,180 @@
+- flash.each do |key, value|
+  - case key
+  - when 'notice'
+    - @key = 'info'
+    - @sign = 'icon-info-sign'
+  - when 'error'
+    - @key = 'danger'
+    - @sign = 'icon-warning-sign'
+  - else
+    - @key = key
+    - @sign = 'icon-ok-sign'
+  %div{class: "alert alert-#{@key} alert-block fade in"}
+    %button.close.close-sm{"data-dismiss" => "alert", type: "button"}
+      %i.icon-remove
+    %h4
+      %i{class: @sign}
+      = key.sub(/^(\w)/) {|s| s.capitalize}
+    %p= value
+%section.panel
+  .panel-body.progress-panel
+    .task-progress
+      %h1{ 'style' => 'font-size:30px'} CAMPAIGN REPORT : #{@report.title.upcase}
+      %p REPORT DETAILS
+    .task-option
+      = link_to 'Back', reports_path, title: 'Back', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', class: "btn btn-white btn-shadow tooltips"
+
+  .row
+    .col-md-4
+      %section.panel
+        %header.panel-heading
+          %i.icon-bullhorn.pad-r.lightgrey
+          Campaigns
+                          
+        %table.table
+          %thead
+            %tr
+              %th{style: 'text-align:center'} #
+              %th Campaign
+              %th{ class: 'text-center', style: 'padding-right:25px'}
+                .pull-right
+                  *Email Send
+          %tbody
+            - count = 0
+            - @report.campaigns.each do |campaign|
+              - count += 1
+              %tr
+                %td{style: 'text-align:center'}= count
+                %td= campaign.title
+                %td{ class: 'text-center', style: 'padding-right:25px'}
+                  .pull-right
+                    = Response.where(campaign_id: campaign.id).count
+      %i{class: 'small', style: 'padding-left: 15px'} *Total email sent include sending retries
+    .col-md-8
+      %section.panel
+        %header.panel-heading
+          %i.icon-exchange.pad-r.lightgrey
+          Activities
+       
+        
+        %table.table
+          %thead
+            %tr
+              %th{style: 'text-align:center'} #
+              %th Action Type
+              %th{ class: 'text-center', style: 'padding-right:25px'}
+                .pull-right
+                  \# of Recipient
+          %tbody
+            %tr
+              %td{style: 'text-align:center'} 1
+              %td
+                %span.fa.fa-file-image-o{aria_hidden: "true"}
+                Users had enabled image loading in their email clients
+              %td{ class: 'text-center', style: 'padding-right:25px'}
+                .pull-right
+                  = link_to RecipientDetail.where(campaign_id: @report.report_sources.pluck(:campaign_id)).where(request_type: 1).distinct.count('recipient_id'),
+                    export_report_path(@report.id, format: :xlsx, type: 1)
+            %tr
+              %td{style: 'text-align:center'} 2
+              %td
+                %span.fa.fa-external-link{aria_hidden: "true"}
+                Users browsed the phishing page
+              %td{ class: 'text-center', style: 'padding-right:25px'}
+                .pull-right
+                  = link_to RecipientDetail.where(campaign_id: @report.report_sources.pluck(:campaign_id)).where(request_type: 2).distinct.count('recipient_id'),
+                    export_report_path(@report.id, format: :xlsx, type: 2)
+            %tr
+              %td{style: 'text-align:center'} 3
+              %td
+                %span.fa.fa-user-secret{aria_hidden: "true"}
+                Users posted their credential at the phishing page
+              %td{ class: 'text-center', style: 'padding-right:25px'}
+                .pull-right
+                  = link_to RecipientDetail.where(campaign_id: @report.report_sources.pluck(:campaign_id)).where(request_type: 3).distinct.count('recipient_id'),
+                    export_report_path(@report.id, format: :xlsx, type: 1)
+
+
+
+.row
+  .col-md-12
+    %section.panel
+      %header.panel-heading
+        
+        %i.icon-time.lightgrey
+        All Event Activity -
+        %span.label.label-primary Opened
+        %span.label.label-warning Clicked
+        %span.label.label-danger Posted
+      .panel-body
+        = render partial: 'widgets/timeline', locals: { obj: @report }
+
+.row
+  .col-md-6
+    %section.panel
+      %header.panel-heading
+        %i.icon-globe.lightgrey
+        Operating System
+      .panel-body
+        = render partial: 'widgets/platform', locals: { obj: @report }
+        %table.table
+          %thead
+            %tr
+              %th Operating System
+              %th.text-center
+                .pull-right
+                  Request Count
+          %tbody
+            - platforms = RecipientDetail.where(campaign_id: @report.campaigns.ids).group(:platform).count
+            - p = platforms.sort {|a,b| b[1] <=> a[1]}
+            - p.each do |platform|
+              %tr
+                %td= platform[0]
+                %td.text-center
+                  .pull-right
+                    = platform[1]
+  .col-md-6
+    %section.panel
+      %header.panel-heading
+        %i.icon-globe.lightgrey
+        Browser
+      .panel-body
+        = render partial: 'widgets/user_agent', locals: { obj: @report }
+        %table.table
+          %thead
+            %tr
+              %th Browser
+              %th.text-center
+                .pull-right
+                  Request Count
+          %tbody
+            - browsers = RecipientDetail.where(campaign_id: @report.campaigns.ids).group(:browser).count
+            - b = browsers.sort {|a,b| b[1] <=> a[1]}
+            - b.each do |browser|
+              %tr
+                %td= browser[0]
+                %td.text-center
+                  .pull-right
+                    = browser[1]
+.row
+  .col-md-6
+    %section.panel
+      %header.panel-heading
+        %i.icon-map-marker.pad-r.lightgrey
+        Unique IP Address
+      .panel-body
+        %table.table
+          %thead
+            %tr
+              %th IP Address
+              %th.text-center
+                .pull-right
+                  Request Count
+          %tbody
+            - ip_addresses = RecipientDetail.where(campaign_id: @report.campaigns.ids).group(:ip_address).count
+            - ip_addresses.each do |ip_address|
+              %tr
+                %td= ip_address[0]
+                %td.text-center
+                  .pull-right
+                    = ip_address[1]

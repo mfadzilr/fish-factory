@@ -1,0 +1,21 @@
+= form_for ([@recipient_group, @recipient]) do |f|
+  = render 'shared/errors', obj: @recipient
+
+  .form-group
+    = f.label :full_name
+    = f.text_field :full_name, class: "form-control"
+
+  .form-group
+    = f.label :designation
+    = f.text_field :designation, class: "form-control"
+
+  .form-group
+    = f.label :department
+
+    = f.text_field :department, class: "form-control"
+  .form-group
+    = f.label :email_to
+    = f.text_field :email_to, class: "form-control"
+
+  .actions
+    = f.submit 'Save', class: "btn btn-primary"

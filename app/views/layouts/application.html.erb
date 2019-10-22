@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="keyword" content="PhishFactory Solaris Symphony Sdn. Bhd.">
+    <%= csrf_meta_tags %>
+    <!-- <link rel="shortcut icon" href="img/favicon.png"> -->
+
+    <title>PhishFactory</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="/css/bootstrap/bootstrap-reset.css" rel="stylesheet" type="text/css" media="screen"/>
+    <!--external css-->
+    <link href="/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" media="screen"/>
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <link rel="stylesheet" type="text/css" href="/css/jquery.gritter.css" />
+    <link href="/js/bootstrap-datepicker/css/datepicker.css" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="/js/bootstrap-daterangepicker/daterangepicker-bs3.css" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="/js/bootstrap-datetimepicker/css/datetimepicker.css" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="/js/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen"/>
+
+    <!-- Custom styles for this template -->
+    <link href="/css/style.css" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="/css/style-responsive.css" rel="stylesheet" type="text/css" media="screen"/>
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.js"></script>
+
+    <script src="/js/respond.min.js"></script>
+
+    <![endif]-->
+</head>
+
+  <body>
+
+  <section id="container" class="">
+      <!--header start-->
+      <header class="header white-bg">
+          <div class="sidebar-toggle-box">
+              <div data-original-title="Toggle Navigation" data-placement="right" class="icon-reorder tooltips"></div>
+          </div>
+          <!--logo start-->
+          <%= link_to root_path, class: "logo" do %>
+            Phish<span>Factory</span>
+          <% end %>
+          <!--logo end-->
+          <div class="nav notify-row" id="top_menu">
+            <!--  notification start -->
+            <ul class="nav top-menu">
+              <!-- settings start -->
+              <li class="dropdown" id="inprogress">
+                  <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                      <i class="icon-tasks"></i>
+                      <span class="badge bg-success"></span>
+                  </a>
+                  <ul class="dropdown-menu extended tasks-bar">
+                      <div class="notify-arrow notify-arrow-green"></div>
+                      <li>
+                          <p class="green"></p>
+                      </li>
+                      <li>
+                          
+                      </li>
+                      <li class="external">
+                          <%= link_to 'See All Campaigns', campaigns_path %>
+                      </li>
+                  </ul>
+              </li>
+              <!-- settings end -->
+              <!-- notification dropdown start-->
+              <li id="header_notification_bar" class="dropdown">
+                  <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                      <i class="icon-bell-alt"></i>
+                      <span id="notification_count" class="badge bg-warning"><%= current_user.unread_notifications.count != 0 ? current_user.unread_notifications.count : '' %></span>
+                  </a>
+                  <ul class="dropdown-menu extended notification">
+                      <div class="notify-arrow notify-arrow-yellow"></div>
+                      <li>
+                          <p class="yellow">
+                          <% if current_user.unread_notifications.count != 0 %>
+                            You have <%= current_user.unread_notifications.count %> notifications
+                          <% else %>
+                            No new notifications
+                          <% end %>
+                          </p>
+                      </li>
+                      <% current_user.unread_notifications.each  do |notification| %>
+                      <li>
+                          <a href="#">
+                              <span class="label label-info" style="margin-right:5px" ><i class="icon-bell"></i></span>
+                              <span><%= notification.note %></span>
+                              <span class="small italic" style="float:right"><%= time_ago_in_words(notification.created_at) %> ago</span>
+                          </a>
+                      </li>
+                      <% end %>
+                      <li>
+                          <a id="clearNotification" href="#"> Clear all notifications <i class="icon-trash"></i></a>
+                      </li>
+                  </ul>
+              </li>
+              <!-- notification dropdown end -->
+          </ul>
+          </div>
+          <div class="top-nav ">
+              <ul class="nav pull-right top-menu">
+                  <!-- <li>
+                      <input type="text" class="form-control search" placeholder="Search">
+                  </li> -->
+                  <!-- user login dropdown start-->
+                  <li class="dropdown">
+                      <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                          <img alt="" src="/img/avatar.png">
+                          <span class="username"><%= current_user.fullname %></span>
+                          <b class="caret"></b>
+                      </a>
+                      <ul class="dropdown-menu extended logout">
+                          <div class="log-arrow-up"></div>
+                          <li style="width:100%"><a href="#">
+                            <% if (current_user.subscription) %>
+                            <% if (current_user.subscription.name == 'credit') %>
+                            <%= "CREDIT : #{current_user.subscription.used} / #{current_user.subscription.total}" %>
+                            <%  else %>
+                            <%= "SUBSCRIPTION: #{current_user.subscription.total} users" %>
+                            <% end %>
+                            <% end %>
+                                
+                            
+                              
+                            </a></li>
+                          <li>
+                              <%= link_to destroy_user_session_path, method: :delete do %>
+                                <i class="icon-key"></i> Log Out
+                              <% end %>
+                          </li>
+                      </ul>
+                  </li>
+                  <!-- user login dropdown end -->
+              </ul>
+          </div>
+      </header>
+      <!--header end-->
+      <!--sidebar start-->
+      <aside>
+          <div id="sidebar"  class="nav-collapse ">
+              <!-- sidebar menu start-->
+              <ul class="sidebar-menu" id="nav-accordion">
+                  <li>
+                      <%= link_to root_path, class: (controller_name == 'dashboard' ? 'active' : '')do %>
+                          <i class="icon-dashboard"></i>
+                          <span>Dashboard</span>
+                      <% end %>
+                  </li>
+
+                  <li>
+                      <%= link_to campaigns_path, class: (controller_name == 'campaigns' ? 'active' : '') do %>
+                          <i class="icon-bullhorn"></i>
+                          <span>Campaigns</span>
+                      <% end %>
+                  </li>
+                <li class="sub-menu <%= (controller_name == 'send_profiles' ? 'active' : '') %>">
+                    <a href="javascript:;" <%= (controller_name == 'send_profiles' ? 'class="active"' : '') %>>
+                        <i class="icon-cogs"></i>
+                        <span>Settings</span>
+                    </a>
+                    <ul class="sub" <%= (controller_name == 'send_profiles' ? 'style="display:block;"' : '') %>>
+                        <li <%= (controller_name == 'send_profiles' ? 'class="active"' : '') %>>
+                        <%= link_to send_profiles_path, class: (controller_name == 'send_profiles' ? 'active' : '') do %>
+                            <i class="icon-fighter-jet"></i>
+                            <span>Send Profiles</span>
+                        <% end %>
+                        </li>
+                    </ul>
+              </li>
+                
+
+                  <li>
+                      <%= link_to recipient_groups_path, class: (controller_name == 'recipient_groups' ? 'active' : '') do %>
+                          <i class="icon-group"></i>
+                          <span>Recipient Group</span>
+                      <% end %>
+                  </li>
+                  <li>
+                      <%= link_to email_templates_path, class: (controller_name == 'email_templates' ? 'active' : '') do %>
+                          <i class="icon-file"></i>
+                          <span>Email Template</span>
+                      <% end %>
+                  </li>
+                  <li>
+                      <%= link_to site_pages_path, class: (controller_name == 'site_pages' ? 'active' : '') do %>
+                          <i class="icon-globe"></i>
+                          <span>Phishing Page</span>
+                      <% end %>
+                  </li>
+                  <li>
+                      <%= link_to reports_path, class: (controller_name == 'reports' ? 'active' : '') do %>
+                          <i class="icon-bar-chart"></i>
+                          <span>Campaign Report</span>
+                      <% end %>
+                  </li>
+                <% if current_user.admin? %>
+                  <li class="sub-menu">
+                      <%= link_to 'javascript:;', class: (controller_name == 'attachment_files' ||  controller_name == 'users' ? 'active' : '') do %>
+                          <i class="icon-tasks"></i>
+                          <span>Administration</span>
+                      <% end %>
+                      <ul class="sub">
+                          <li class="<%= controller_name == 'attachment_files' ? 'active' : '' %>"><%= link_to 'Attachment File', attachment_files_path %></li>
+                          <li class="<%= controller_name == 'users' ? 'active' : '' %>"><%= link_to 'User Management', users_path %></li>
+                      </ul>
+                  </li>
+                <% end %>
+                  <li>
+                      <%= link_to campaigns_path do %>
+                          <i class="icon-question-sign"></i>
+                          <span>Help</span>
+                      <% end %>
+                  </li>
+              </ul>
+              <!-- sidebar menu end-->
+          </div>
+      </aside>
+      <!--sidebar end-->
+      <!--main content start-->
+      <section id="main-content">
+          <section class="wrapper site-min-height">
+              <!-- page start-->
+              <%= yield %>
+              <!-- page end-->
+          </section>
+      </section>
+      <!--main content end-->
+      <!--footer start-->
+      <footer class="site-footer">
+          <div class="text-center">
+              2018 &copy; Solaris Symphony Sdn. Bhd.
+              <a href="#" class="go-top">
+                  <i class="icon-angle-up"></i>
+              </a>
+          </div>
+      </footer>
+      <!--footer end-->
+  </section>
+
+    <!-- js placed at the end of the document so the pages load faster -->
+    
+    <script src="/js/jquery.js"></script>
+    <%= javascript_include_tag 'application' %>
+    <script src="/js/bootstrap.min.js"></script>
+
+    <script src="/js/jquery.dcjqaccordion.2.7.js"></script>
+
+    <script src="/js/bootstrap-switch.js"></script>
+
+    <script src="/js/jquery.scrollTo.min.js"></script>
+    <script src="/js/jquery.nicescroll.js"></script>
+    <script type="text/javascript" src="/js/jquery.gritter.js"></script>
+    <script src="/js/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <script src="/js/moment.min.js"></script>
+    <script src="/js/jquery-knob/js/jquery.knob.js"></script>
+    <script src="/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="/js/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+    <script src="/js/bootstrap-daterangepicker/moment.min.js"></script>
+    <script src="/js/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="/js/ckeditor/ckeditor.js"></script>
+    <!-- <script src="/js/chart-master/Chart.js"></script> -->
+    
+    <% #yield :javascript %>
+    
+    <!--common script for all pages-->
+    <script src="/js/easy-pie-chart.js"></script>
+    <script src="/js/common-scripts.js"></script>
+
+   <script>
+
+      //knob
+      $(".knob").knob();
+
+  </script>
+
+
+  </body>
+</html>

@@ -1,0 +1,16 @@
+@response_details = RecipientDetail.where(campaign_id: report.campaign_ids).where(request_type: action_type).where.not(ip_address: nil).distinct('recipient_id')
+
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: report.title) do |sheet|
+  @response_details.each do |response|
+    recipient = Recipient.find(response.recipient_id)
+    sheet.add_row [ recipient.full_name,
+      recipient.designation,
+      recipient.department,
+      recipient.email_to,
+      response.created_at,
+      response.ip_address,
+      response.user_agent ]
+  end
+end

@@ -1,0 +1,25 @@
+.panel.panel-info
+  .panel-heading
+    %h1 Listing attachment_files
+  .panel-body
+    %table.table.table.striped
+      %thead
+        %tr.th-bgcolor-red
+          %th Name
+          %th Description
+          %th
+          %th
+          %th
+          %th
+
+      %tbody
+        - @attachment_files.each do |attachment_file|
+          %tr
+            %td= attachment_file.name
+            %td= attachment_file.description
+            %td= attachment_file.payload.path
+            %td= link_to 'Show', attachment_file
+            %td= link_to 'Edit', edit_attachment_file_path(attachment_file)
+            %td= link_to 'Destroy', attachment_file, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+    = link_to 'New Attachment file', new_attachment_file_path, class: "btn btn-primary"

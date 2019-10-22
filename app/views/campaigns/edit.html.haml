@@ -1,0 +1,10 @@
+%section.panel
+	.panel-body.progress-panel
+		.task-progress
+			%h1 EDIT CAMPAIGN
+			%p Edit phishing campaign
+		.task-option
+			= link_to 'Back', campaigns_path, title: 'Back', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', class: "btn btn-white btn-shadow tooltips"
+	.row
+		.col-lg-12{:style => "margin:20px;width:95%"}
+			= render 'form'

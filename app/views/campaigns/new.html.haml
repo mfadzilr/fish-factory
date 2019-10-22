@@ -1,0 +1,15 @@
+%section.panel
+	.panel-body.progress-panel
+		.task-progress
+			%h1{ 'style' => 'font-size:30px'} NEW CAMPAIGN 
+			%p START A NEW PHISHING CAMPAIGN
+		.task-option
+			= link_to 'Back', campaigns_path, title: 'Back', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', class: "btn btn-white btn-shadow tooltips"
+	.row
+		.col-lg-12{:style => "margin:20px;width:95%"}
+			= render 'form'
+
+
+
+
+-# = link_to 'Back', campaigns_path

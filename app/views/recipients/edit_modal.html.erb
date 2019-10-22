@@ -1,0 +1,44 @@
+    
+    <%= form_for ([@recipient_group, @recipient]), multipart: true, :html => {:class =>'form-horizontal tasi-form async'} do |f| %>
+            <div class="alert alert-warning alert-block fade in hidden">
+              <h4>
+                  <i class="icon-ko-sign"></i>
+                  Error
+              </h4>
+              <ul id="message"></ul>
+          </div>
+          <div class="alert alert-info alert-block fade in hidden">
+              <h4>
+                  <i class="icon-ok-sign"></i>
+                  Success
+              </h4>
+              <p id="message-info"></p>
+          </div>
+            <div class="form-group">
+                <label class="col-lg-4 col-sm-4 control-label lightgrey">FULL NAME</label>
+                <div class="col-lg-8">
+                    <%= f.text_field :full_name, class: "form-control" %>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-4 col-sm-4 control-label lightgrey">DESIGNATION</label>
+                <div class="col-lg-8">
+                    <%= f.text_field :designation, class: "form-control" %>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-4 col-sm-4 control-label lightgrey">DEPARTMENT</label>
+                <div class="col-lg-8">
+                    <%= f.text_field :department, class: "form-control" %>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-4 col-sm-4 control-label lightgrey">EMAIL</label>
+                <div class="col-lg-8">
+                    <%= f.text_field :email_to, class: "form-control" %>
+                </div>
+            </div>
+        <div class="modal-footer">
+          <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+          <button class="btn btn-success" type="submit"><i class="icon-refresh icon-spin hidden" style="margin-right: 10px"></i> Save changes </button>
+     <% end %>

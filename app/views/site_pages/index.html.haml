@@ -1,0 +1,138 @@
+- flash.each do |key, value|
+  - case key
+  - when 'notice'
+    - @key = 'info'
+    - @sign = 'icon-info-sign'
+  - when 'error'
+    - @key = 'danger'
+    - @sign = 'icon-warning-sign'
+  - else
+    - @key = key
+    - @sign = 'icon-ok-sign'
+  %div{class: "alert alert-#{@key} alert-block fade in"}
+    %button.close.close-sm{"data-dismiss" => "alert", type: "button"}
+      %i.icon-remove
+    %h4
+      %i{class: @sign}
+      = key.sub(/^(\w)/) {|s| s.capitalize}
+    %p= value
+%section.panel
+  .panel-body.progress-panel
+    .task-progress
+      %h1{ 'style' => 'font-size:30px'} PHISHING PAGES
+      %p LIST OF PHISHING PAGES
+    .task-option
+      %a.btn.btn-default.btn-shadow.tooltips{"data-href" => site_pages_new_modal_path, "data-placement" => "left", "data-target" => "#newModal", "data-title" => "Create New Phishing Page", "data-toggle" => "cmodal", href: "#newModal"}
+        Create New Phishing Page
+  .row{:style => "margin: 15px 15px 15px 0px"}
+    .col-lg-12
+      %ul.nav.nav-tabs
+        %li.active
+          = link_to '#my', data: { toggle: 'tab' } do
+            My Phishing Page
+        %li
+          = link_to '#public', data: { toggle: 'tab' } do
+            Available Phishing Page
+
+      .tab-content{ style: "margin-top:20px" }
+        #my.tab-pane.fade.in.active
+          - if @site_pages.count == 0 
+            %table.table.table-hover.personal-task
+              %tr
+                %td{colspan: '5', style: 'border:none; text-align: center; font-weight:300; font-size: 50px; color: lightgrey;padding-top: 40px;padding-bottom:40px'} 
+                  %i.icon-info-sign{style: 'font-size: 50px; color: lightgrey'}
+                  You don't have any phishing page
+          - else 
+            %table.table.table-hover.personal-task
+              %thead
+                %tr
+                  %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"} TITLE
+                  %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"} DESCRIPTION
+                  %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"} STATUS
+                  %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"}
+              %tbody
+                - @site_pages.each do |site_page|
+                  %tr
+                    %td= site_page.title
+                    %td= site_page.description
+                    %td= site_page.is_private ? 'PRIVATE' : 'PUBLIC'
+                    %td{ align: 'right' }
+                      /= link_to 'Show', recipient_group
+                      %a.btn.btn-xs.btn-white.tooltips{"target" =>"_preview", "data-placement" => "bottom", "data-title" => "Preview Phishing Page", href: site_page_path(site_page)}
+                        %i.icon-globe{style: "color: #41cac0"}
+
+                      %a.btn.btn-xs.btn-white.tooltips{"data-href" => edit_modal_site_page_path(site_page), "data-placement" => "bottom", "data-target" => "#editModal", "data-title" => "Edit Phishing Page", "data-toggle" => "cmodal", href: "#editModal"}
+                        %i.icon-edit{style: "color: #61a642"}
+                      = link_to site_page,
+                        title: 'Delete', 
+                        'data-toggle' => 'tooltip', 'data-placement' => 'bottom',
+                        :method => :delete, :data => { :confirm => 'Are you sure?' },
+                        class: "btn btn-xs btn-danger tooltips" do
+                        %i.icon-trash{:style => "color: white"}
+
+            %div{ align: "center" }
+              = will_paginate @site_pages
+        #public.tab-pane.fade.in
+          - if @public_pages.count == 0 
+            %table.table.table-hover.personal-task
+              %tr
+                %td{colspan: '5', style: 'border:none; text-align: center; font-weight:300; font-size: 50px; color: lightgrey;padding-top: 40px;padding-bottom:40px'} 
+                  %i.icon-info-sign{style: 'font-size: 50px; color: lightgrey'}
+                  Currently, there is no phishing page available
+          - else 
+            %table.table.table-hover.personal-task
+              %thead
+                %tr
+                  %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"} TITLE
+                  %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"} DESCRIPTION
+                  %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"} STATUS
+                  %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"}
+              %tbody
+                - @public_pages.each do |site_page|
+                  %tr
+                    %td= site_page.title
+                    %td= site_page.description
+                    %td= site_page.is_private ? 'PRIVATE' : 'PUBLIC'
+                    %td{ align: 'right' }
+                      /= link_to 'Show', recipient_group
+                      %a.btn.btn-xs.btn-white.tooltips{"target" =>"_preview", "data-placement" => "bottom", "data-title" => "Preview Phishing Page", href: site_page_path(site_page)}
+                        %i.icon-globe{style: "color: #41cac0"}
+
+                      %a.btn.btn-xs.btn-white.tooltips{"data-placement" => "bottom", "data-title" => "Copy Phishing Page", href: copy_site_page_path(site_page)}
+                        %i.icon-copy{style: "color: #57c8f2"}
+                      
+
+            %div{ align: "center" }
+              = will_paginate @site_pages
+
+    #showModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "showModalLabel", role: "dialog", tabindex: "-1"}
+      .modal-dialog{ style: "width:768px"}
+        .modal-content
+          .modal-header
+            %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+            %h4.modal-title
+              %i.icon-file{style: "color: #FF6C60; font-size: 26px; padding-right: 10px"}
+              View Phishing Page
+          #testTarget.modal-body
+            Loading...
+      }
+    #editModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "editModalLabel", role: "dialog", tabindex: "-1"}
+      .modal-dialog{ style: "width:95%;height:80%"}
+        .modal-content
+          .modal-header
+            %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+            %h4.modal-title
+              %i.icon-file{style: "color: #FF6C60; font-size: 26px; padding-right: 10px"}
+              Edit Phishing Page
+          #testTarget.modal-body
+            Loading...
+    #newModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "newModalLabel", role: "dialog", tabindex: "-1"}
+      .modal-dialog{ style: "width:95%;height:80%"}
+        .modal-content
+          .modal-header
+            %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+            %h4.modal-title
+              %i.icon-file{style: "color: #FF6C60; font-size: 26px; padding-right: 10px"}
+              Create New Phishing Page
+          #testTarget.modal-body
+            Loading...

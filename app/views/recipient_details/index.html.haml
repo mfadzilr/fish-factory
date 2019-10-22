@@ -1,0 +1,112 @@
+%section.panel
+  .panel-body.progress-panel
+    .task-progress
+      %h1{ 'style' => 'font-size:30px'}= @campaign.title.sub(/^(\w)/) {|s| s.capitalize}
+      %p AFFECTED RECIPIENT ACTIVITY
+      
+    .task-option
+     
+      = link_to 'Back', campaign_path(@campaign), title: 'Back', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', class: "btn btn-white btn-shadow tooltips"
+
+    
+  .panel-body.progress-panel  
+    = form_tag campaign_recipient_details_path(@campaign), method: :get, action: :index, class: "navbar-right", style: "margin-bottom:20px", role: "search" do
+      .input-group
+        = text_field_tag :search, nil, class: "form-control search-form input-lg", placeholder: "Name or email address"
+        .input-group-btn
+          %button.btn.btn-success.search-btn.btn-lg{ type: "submit"}
+            
+            %span.icon-search{aria_hidden: true}
+    
+    %table.table.table-hover.personal-task{style: 'padding-top:20px'}
+      %thead
+        %tr
+          %td{:style=>"width: 20%; color: #39b5aa"} 
+            %i.icon-user
+            RECIPIENT NAME
+          %td{:style=>"width: 20%; color: #39b5aa"} 
+            %i.icon-envelope
+            EMAIL ADDRESS
+          %td{:style=>"width: 20%; color: #39b5aa", class:"text-center"} REMOTE CONTENT ENABLED
+
+          %td{:style=>"width: 20%; color: #39b5aa;", class:"text-center"} LINK CLICKED
+          %td{:style=>"width: 20%; color: #39b5aa;", class:"text-center"} CREDENTIAL POSTED
+          %td{:style=>"width: 10%; color: #39b5aa;", class:"text-center"} OS
+     
+      %tbody
+        - if @recipients.count == 0 
+          %tr
+            %td{colspan: '5', style: 'text-align: center; font-size: 50px; color: lightgrey;padding-top: 40px;padding-bottom:40px'} 
+              %i.icon-bar-chart{style: 'font-size: 50px; color: lightgrey'}
+              NO DATA
+        - else
+          - @recipients.each_with_index do |recipient, index|
+            %tr
+              %td= link_to recipient.full_name, "#index#{index}", data: {toggle: 'collapse'}
+              %td= recipient.email_to
+              %td.text-center
+                - if !@campaign.recipient_details.where('recipient_id = ? and request_type = ?',recipient, 1).empty?
+                  %span.icon-warning-sign
+                - else
+                  &nbsp;
+
+              %td.text-center
+                - if !@campaign.recipient_details.where('recipient_id = ? and request_type = ?',recipient, 2).empty?
+                  %span.icon-warning-sign
+                - else
+                  &nbsp;
+
+              %td.text-center
+                - if !@campaign.recipient_details.where('recipient_id = ? and request_type = ?',recipient, 3).empty?
+                  %span.icon-warning-sign
+                - else
+                  &nbsp;
+                  
+              %td.text-center
+                - rd = @campaign.recipient_details.where('recipient_id = ?', recipient).first
+                - case rd.platform
+                  - when 'Macintosh'
+                    %span.icon-apple
+                  - when 'Windows'
+                    %span.icon-windows
+                  - when 'Linux'
+                    %span.icon-linux
+                  - when 'Android'
+                    %span.icon-android
+                
+
+            %tr.collapse{id: "index#{index}"}
+              - recipient_details = @campaign.recipient_details.where(recipient_id: recipient)
+              %td{colspan: '100%'}
+                %header.panel-heading Activity History
+                - if recipient_details.nil?
+                  No data available
+                - else
+                  %table.table.table-hover
+                    %thead
+                      %tr.danger
+                        %th Date
+                        %th.text-center
+                          %span.fa.fa-desktop{aria_hidden: "true"}
+                          IP Address
+                        %th User Agent
+                        %th.text-center Action Type
+                    %tbody
+                      - recipient_details.order('id DESC').each do |recipient_detail|
+                        %tr
+                          %td= recipient_detail.created_at
+                          %td.text-center= recipient_detail.ip_address
+                          %td.col-md-5= recipient_detail.user_agent
+                          %td.text-center
+                            - case recipient_detail.request_type
+                            - when 1
+                              Email Opened
+                            - when 2
+                              Link Clicked
+                            - when 3
+                              = link_to 'Credential Posted', campaign_recipient_detail_path(@campaign, recipient_detail)
+
+    %div{ align: "center" }
+      = will_paginate @recipients
+
+    

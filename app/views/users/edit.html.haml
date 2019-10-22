@@ -1,0 +1,39 @@
+.panel.panel-info
+  .panel-heading
+    %h3 Change Password
+  .panel-body
+    = form_for(edit_user_registration_path, html: { method: :put }) do |f|
+
+      .form-group
+      -#   = f.label :email
+      -#   = f.email_field :email, autofocus: true
+      -# - if devise_mapping.confirmable? && resource.pending_reconfirmation?
+      -#   %div
+      -#     Currently waiting confirmation for: #{resource.unconfirmed_email}
+
+      .form-group
+        = f.label :password
+        %i (leave blank if you don't want to change it)
+        %br/
+        = f.password_field :password,
+          autocomplete: "off",
+          class: "form-control", style: "width:300px"
+        - if @minimum_password_length
+          %em
+            = @minimum_password_length
+            characters minimum
+
+      .form-group
+        = f.label :password_confirmation
+        = f.password_field :password_confirmation,
+          autocomplete: "off",
+          class: "form-control", style: "width:300px"
+
+      .form-group
+        = f.label :current_password
+        %i (we need your current password to confirm your changes)
+        = f.password_field :current_password,
+          autocomplete: "off",
+          class: "form-control", style: "width:300px"
+      .form-group
+        = f.submit "Update", class: "btn btn-primary"

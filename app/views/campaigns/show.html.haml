@@ -1,0 +1,105 @@
+%section.panel
+  .panel-body.progress-panel
+    .task-progress
+      %h1{ 'style' => 'font-size:30px'}= @campaign.title.sub(/^(\w)/) {|s| s.capitalize}
+      %p PHISHING CAMPAIGNS DETAILS
+    .task-option{style: 'padding-top: 10px;'}
+      = link_to 'View Recipient Details', campaign_recipient_details_path(@campaign), title: 'View Recipient Details', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', class: "btn btn-default btn-shadow tooltips"
+      = link_to 'Back', campaigns_path, title: 'Back', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', class: "btn btn-white btn-shadow tooltips"
+
+.row.state-overview
+  .col-lg-3.col-sm-6
+    %section.panel
+      .symbol.blue
+        / terques
+        %i.icon-eye-open
+      .value
+        %h1.count
+          = @campaign.responses.joins(:recipient_details).where("request_type = ?",1).distinct.pluck(:recipient_id).count
+        %p Remote Content Enabled
+  .col-lg-3.col-sm-6
+    %section.panel
+      .symbol.terques
+        / terques
+        %i.icon-external-link
+      .value
+        %h1.count
+          = @campaign.responses.joins(:recipient_details).where("request_type = ?",2).distinct.pluck(:recipient_id).count
+        %p Link Clicked
+  .col-lg-3.col-sm-6
+    %section.panel
+      .symbol.red
+        / terques
+        %i.icon-cloud-upload
+      .value
+        %h1.count
+          = @campaign.responses.joins(:recipient_details).where("request_type = ?",3).distinct.pluck(:recipient_id).count
+        %p Credential Posted
+  .col-lg-3.col-sm-6
+    %section.panel
+      .symbol.yellow
+        / terques
+        %i.icon-user
+      .value
+        %h1.count
+          = @campaign.responses.joins(:recipient_details).where("request_type = ? or request_type = ? or request_type = ?",1, 2, 3).distinct.pluck(:recipient_id).count
+        %p Affected Recipient
+  
+%section.panel
+  .panel-body.progress-panel
+    .row
+      .col-md-6
+        .panel.panel-default
+          .panel-heading
+            %h4
+              %i.icon-bullhorn{style: 'padding-right: 10px'}
+              CAMPAIGN INFORMATION
+          .panel-body
+           
+
+            %table.table
+              %tbody
+                %tr
+                  %td{style: 'border: none; width: 40%'}
+                    %strong START DATE
+                  %td{style: 'border: none; width: 60%'}= @campaign.date_start_at.strftime("%d %b %Y %I:%M %p")
+                %tr
+                  %td{style: 'border: none'}
+                    %strong END DATE
+                  %td{style: 'border: none'}= @campaign.date_end_at.strftime("%d %b %Y %I:%M %p")
+                %tr
+                  %td{style: 'border: none'}
+                    %strong EMAIL TEMPLATE
+                  %td{style: 'border: none'}= EmailTemplate.find(@campaign.email_template_id).title
+                %tr
+                  %td{style: 'border: none'}
+                    %strong PHISHING PAGE
+                  %td{style: 'border: none'}= SitePage.find(@campaign.site_page_id).title
+                %tr
+                  %td{style: 'border: none'}
+                    %strong TOTAL RECIPIENTS
+                  %td{style: 'border: none'}= @campaign.total_target
+
+      .col-md-6
+        .panel.panel-default
+          .panel-heading
+            %h4
+              %i.icon-envelope-alt{style: 'padding-right: 10px'}
+              SENDER INFORMATION
+          .panel-body
+            %table.table
+             
+              %tbody
+                %tr
+                  %td{style: 'border: none; width: 40%'}
+                    %strong SENDER NAME
+                  %td{style: 'border: none; width: 60%'}= @campaign.sender_name
+                %tr
+                  %td{style: 'border: none'}
+                    %strong SENDER EMAIL
+                  %td{style: 'border: none'}= @campaign.sender_email
+                %tr
+                  %td{style: 'border: none'}
+                    %strong SENDER SUBJECT
+                  %td{style: 'border: none'}= @campaign.sender_subject
+    

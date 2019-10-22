@@ -1,0 +1,78 @@
+    
+    <%= form_for @send_profile, multipart: true, :html => {data: { sentestemail: send_profiles_sendtestemail_path }, :class =>'form-horizontal tasi-form async'} do |f| %>
+            <div class="alert alert-warning alert-block fade in hidden">
+              
+              <h4>
+                  <i class="icon-ko-sign"></i>
+                  Error
+              </h4>
+              <ul id="message"></ul>
+          </div>
+          <div class="alert alert-info alert-block fade in hidden">
+              <h4>
+                  <i class="icon-ok-sign"></i>
+                  Success
+              </h4>
+              <p id="message-info"></p>
+          </div>
+            <div class="form-group">
+                <label class="col-lg-4 col-sm-4 control-label lightgrey">PROFILE NAME</label>
+                <div class="col-lg-8">
+                    <%= f.text_field :title, class: "form-control" %>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-4 col-sm-4 control-label lightgrey">MAIL SERVER</label>
+                <div class="col-lg-8">
+                    <%= f.text_field :address, class: "form-control" %>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-4 col-sm-4 control-label lightgrey">PORT</label>
+                <div class="col-lg-8">
+                    <%= f.text_field :port, class: "form-control" %>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-4 col-sm-4 control-label lightgrey">USERNAME</label>
+                <div class="col-lg-8">
+                    <%= f.text_field :user_name, class: "form-control" %>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-4 col-sm-4 control-label lightgrey">PASSWORD</label>
+                <div class="col-lg-8">
+                    <%= f.text_field :password, class: "form-control" %>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-4 col-sm-4 control-label lightgrey">AUTHENTICATION</label>
+                <div class="col-lg-8">
+                    <%= f.select(:authentication, [["PLAIN", "plain"], ["LOGIN", "login"], ["CRAM MD5", "cram_md5" ]], {}, {:class =>'form-control'}) %>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-4 col-sm-4 control-label lightgrey">AUTO START TLS</label>
+                <div class="col-lg-8">
+                    <%= f.check_box :enable_starttls_auto, :data => { :toggle => 'switch' } %>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-4 col-sm-4 control-label lightgrey">OPENSSL VERIFY MODE</label>
+                <div class="col-lg-8">
+                    <%= f.select(:openssl_verify_mode, [["NONE", "none"], ["PEER", "peer"]], {}, {:class =>'form-control'}) %>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-4 col-sm-4 control-label lightgrey">PUBLIC</label>
+                <div class="col-lg-8">
+                    <%= f.check_box :public, :data => { :toggle => 'switch' } %>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button id="sendtestemail" class="btn btn-white pull-left" type="button">Send Test Email <i class="icon-refresh icon-spin hidden" style="margin-left: 10px"></i></button>
+          <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+          <button class="btn btn-success" type="submit"><i class="icon-refresh icon-spin hidden" style="margin-right: 10px"></i> Save changes </button>
+
+     <% end %>

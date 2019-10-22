@@ -1,0 +1,180 @@
+= form_for @campaign, :html => { data: { testcampaignemail: campaigns_testcampaignemailnow_path } } do |f|
+  = render 'shared/errors', obj: @campaign
+  .alert.alert-warning.alert-block.fade.in.hidden
+    %h4
+      %i.icon-ko-sign
+      Error
+    %ul#message
+  .alert.alert-info.alert-block.fade.in.hidden
+    %h4
+      %i.icon-ok-sign
+      Success
+    %p#message-info
+  %ul#new_campaign_tab.nav.nav-tabs
+    %li.active
+      = link_to '#campaign', data: { toggle: 'tab' } do
+        Campaign
+    %li
+      = link_to '#site_address', data: { toggle: 'tab' } do
+        Site Address
+    %li
+      = link_to '#sender', data: { toggle: 'tab' } do
+        Sender Information
+    %li
+      = link_to '#template', data: { toggle: 'tab' } do
+        Templates
+    %li
+      = link_to '#recipient_group', data: { toggle: 'tab' } do
+        Recipient Groups
+  .tab-content{ style: "margin-top:20px" }
+    #campaign.tab-pane.fade.in.active
+      .form-group
+        = f.label :title do
+          = "Title"
+          %i.icon-question-sign{ class: "tooltips", data: { toggle: 'tooltip', title: 'Campaign Title', placement: 'right' }, style: "color:lightgrey; font-size: 14px" }
+        = f.text_field :title, placeholder: 'Campaign #1', class: "form-control"
+      .form-group
+        = f.label :description do
+          = "Description"
+          %i.icon-question-sign{ class: "tooltips", data: { toggle: 'tooltip', title: 'Brief description about the campaign', placement: 'right' }, style: "color:lightgrey; font-size: 14px" }
+        = f.text_area :description, class: "form-control", rows: 4
+      .row
+        .col-md-4
+          .form-group
+            = f.label :date_start_at do
+              = 'Date Start'
+              %i.icon-question-sign{ class: "tooltips", data: { toggle: 'tooltip', title: 'Campaign start date', placement: 'right' }, style: "color:lightgrey; font-size: 14px" }
+            .input-group.date.form_datetime-component
+              - if (@campaign.date_start_at)
+                = f.text_field :date_start_at, value: @campaign.date_start_at.strftime("%Y-%m-%d %I:%M %p"), class: "form-control"
+              - else
+                = f.text_field :date_start_at, class: "form-control"
+              %span.input-group-btn
+                %button.btn.btn-danger.date-set
+                  %i.icon-calendar
+
+        .col-md-4
+          .form-group
+            = f.label :date_end_at do
+              = 'Date End'
+              %i.icon-question-sign{ class: "tooltips", data: { toggle: 'tooltip', title: 'Campaign cut-off date', placement: 'right' }, style: "color:lightgrey; font-size: 14px" }
+            .input-group.date.form_datetime-component
+              - if (@campaign.date_end_at)
+                = f.text_field :date_end_at, value: @campaign.date_end_at.strftime("%Y-%m-%d %I:%M %p"), class: "form-control"
+              - else
+                = f.text_field :date_end_at, class: "form-control"
+              %span.input-group-btn
+                %button.btn.btn-danger.date-set
+                  %i.icon-calendar
+    #site_address.tab-pane.fade
+      .form-group
+        = f.label :site_address do
+          = "Site Address"
+          %i.icon-question-sign{ class: "tooltips", data: { toggle: 'tooltip', title: 'Phishing site address. Enter your domain url or leave it blank.', placement: 'right' }, style: "color:lightgrey; font-size: 14px" }
+        = f.text_field :site_address, placeholder: root_url, class: "form-control"
+        %p
+          %br
+            %i If blank, default host will be used. Note: This is the phishing site address.
+    #sender.tab-pane.fade
+      
+      .form-group
+        = f.label :sender_name do
+          = "Sender Name"
+          %i.icon-question-sign{ class: "tooltips", data: { toggle: 'tooltip', title: 'Sender Name will be used when sending the phishing emails', placement: 'right' }, style: "color:lightgrey; font-size: 14px" }
+        = f.text_field :sender_name, placeholder: 'John Doe', class: "form-control"
+      .form-group
+        = f.label :sender_email do
+          = "Sender Email"
+          %i.icon-question-sign{ class: "tooltips", data: { toggle: 'tooltip', title: 'Sender Name will be used when sending the phishing emails', placement: 'right' }, style: "color:lightgrey; font-size: 14px" }
+        = f.email_field :sender_email, placeholder: 'john@example.com', class: "form-control"
+      .form-group
+        = f.label :sender_subject do
+          = "Sender Subject"
+          %i.icon-question-sign{ class: "tooltips", data: { toggle: 'tooltip', title: 'Sender Subject will be used as the email subject when sending the phishing emails', placement: 'right' }, style: "color:lightgrey; font-size: 14px" }
+
+        = f.text_field :sender_subject, placeholder: 'Hi {{USER}}, how are you?', class: "form-control"
+        %p
+          %i Note: <b>{{USER}}</b> markup will replaced with recipient Full Name
+      .form-group
+        = f.label('Send Profile') do
+          = "Send Profile"
+          %i.icon-question-sign{ class: "tooltips", data: { toggle: 'tooltip', title: 'Select default unless you need to send the phishing email via other mail server & accounts', placement: 'right' }, style: "color:lightgrey; font-size: 14px" }
+        = f.collection_select :send_profile_id, 
+          SendProfile.where("user_id = ? or public = ?", current_user, true),
+          :id, :title, { include_blank: '- Please Select -', selected: @campaign.send_profile_id },
+          class: "form-control"
+      .form-group
+        
+    #template.tab-pane.fade
+      .form-group
+        = f.label :email_template_id  do
+          = "Phishing Email Template"
+          %i.icon-question-sign{ class: "tooltips", data: { toggle: 'tooltip', title: 'Phishing Email Template will be used when sending the phishing emails', placement: 'right' }, style: "color:lightgrey; font-size: 14px" }
+        = f.collection_select :email_template_id,
+          EmailTemplate.where("user_id = ? or is_private = ?", current_user, false),
+          :id, :title, { include_blank: '- Please Select -', selected: @campaign.email_template_id },
+          class: "form-control"
+      .form-group
+        = f.label('Phishing Site') do
+          = "Phishing Site Template"
+          %i.icon-question-sign{ class: "tooltips", data: { toggle: 'tooltip', title: 'Phishing Site Template will be used when a target user clicked on the phishing link', placement: 'right' }, style: "color:lightgrey; font-size: 14px" }
+        = f.collection_select :site_page_id, 
+          SitePage.where("user_id = ? or is_private = ?", current_user, false),
+          :id, :title, { include_blank: '- Please Select -', selected: @campaign.site_page_id },
+          class: "form-control"
+      
+      .form-group
+        .row
+          .col-md-2
+            = f.label('Attach a file?') do
+              = "Attach a file?"
+              %i.icon-question-sign{ class: "tooltips", data: { toggle: 'tooltip', title: 'File attachement that will be sent along with the phishing emails', placement: 'right' }, style: "color:lightgrey; font-size: 14px" }
+          .col-md-10
+            = f.check_box :attach_file
+        = f.collection_select :attachment_file_id,
+          AttachmentFile.all,
+          :id, :name, { include_blank: '- Please Select -', selected: @campaign.attachment_file_id },
+          class: "form-control"
+
+    #recipient_group.tab-pane.fade
+      %table.table.table-striped
+        %thead
+          %tr.th-bgcolor-red
+            %th{style: "width:1%"}
+              .pull-left
+                %div
+                  %input#toggle_recipient_group{:type => "checkbox"}
+            %th Group
+            %th Description
+            %th.text-center Recipient #
+            
+        %tbody
+          - if !@recipient_groups.nil?
+            - @recipient_groups.each do |recipient_group|
+              %tr
+                %td
+                  .pull-left
+                    = f.check_box :recipient_group_ids, { multiple: true }, recipient_group.id, false
+                %td= recipient_group.name
+                %td= recipient_group.description
+                %td.text-center= recipient_group.recipients.count
+  %hr              
+  .form-group
+    %a#testcampaignemail.btn.btn-default.btn-shadow.tooltips{"data-placement" => "right", "data-title" => "Send a test email using the provided Site Address, Sender Information and Templates"}
+      %i.icon-refresh.icon-spin.hidden{:style => "margin-right: 10px"}
+      Send Test Email
+    %button#savecampaign.btn.btn-primary.btn-shadow.tooltips{"data-placement" => "right", "data-title" => "Create and save a new campaign",:type => "submit"}
+      %i.icon-refresh.icon-spin.hidden{:style => "margin-right: 10px"}
+      Save Campaign
+
+
+#testSendModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "newModalLabel", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+        %h4.modal-title
+          %i.icon-group{style: "color: #FF6C60; font-size: 26px; padding-right: 10px"}
+          Send a test email
+      #testTarget.modal-body
+        Loading...

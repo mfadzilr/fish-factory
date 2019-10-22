@@ -1,0 +1,41 @@
+= form_for @send_profile, multipart: true do |f|
+  = render 'shared/errors', obj: @send_profile
+
+  .form-group
+    = f.label :profile_name
+    = f.text_field :title, class: "form-control", style: "width:300px"
+
+  .form-group
+    = f.label :mail_server_address
+    = f.text_field :address, class: "form-control", style: "width:300px"
+
+  .form-group
+    = f.label :port
+    = f.text_field :port, class: "form-control", style: "width:50px"
+
+  .form-group
+    = f.label :user_name
+    = f.text_field :user_name, class: "form-control", style: "width:300px"
+
+  .form-group
+    = f.label :password
+    = f.text_field :password, class: "form-control", style: "width:300px"
+
+  .form-group
+    = f.label :authentication
+    = f.select :authentication, [["Plain", "plain"], ["Login", "login"], ["CRAM MD5", "cram_md5" ]], class: "form-control"
+
+  .form-group
+    = f.label :enable_starttls_auto
+    = f.select :enable_starttls_auto, [["True", "1"], ["False", "0"]], class: "form-control"
+
+  .form-group
+    = f.label :openssl_verify_mode
+    = f.select :openssl_verify_mode, [["None", "none"], ["Peer", "peer"]], class: "form-control"
+
+  .form-group
+    = f.label :public
+    = f.select :public, [["False", "0"], ["True", "1"]],  class: "form-control"
+
+  .actions
+    = f.submit 'Save', class: "btn btn-primary"

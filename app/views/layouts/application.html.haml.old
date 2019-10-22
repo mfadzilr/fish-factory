@@ -1,0 +1,17 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title CampaignFactory
+    = csrf_meta_tags
+
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+  %body
+    .container
+      - if (controller_name != 'responses') || (controller_name != 'upload_screenshots')
+        = render partial: 'layouts/navigation'
+      = yield
+
+- if Rails.env.development?
+  = console

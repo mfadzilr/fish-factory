@@ -1,0 +1,69 @@
+- flash.each do |key, value|
+  - case key
+  - when 'notice'
+    - @key = 'info'
+    - @sign = 'icon-info-sign'
+  - when 'error'
+    - @key = 'danger'
+    - @sign = 'icon-warning-sign'
+  - else
+    - @key = key
+    - @sign = 'icon-ok-sign'
+  %div{class: "alert alert-#{@key} alert-block fade in"}
+    %button.close.close-sm{"data-dismiss" => "alert", type: "button"}
+      %i.icon-remove
+    %h4
+      %i{class: @sign}
+      = key.sub(/^(\w)/) {|s| s.capitalize}
+    %p= value
+%section.panel
+  .panel-body.progress-panel
+    .task-progress
+      %h1{ 'style' => 'font-size:30px'} USERS
+      %p LIST OF USERS
+    .task-option
+      = link_to 'New User', new_user_registration_path, title: 'Add new user', 'data-toggle' => 'tooltip', 'data-placement' => 'bottom', class: "btn btn-default btn-shadow tooltips"
+
+    %table.table.table-hover.personal-task
+      %thead
+        %tr
+          %td{:style=>" color: #39b5aa"} NAME
+          %td{:style=>" color: #39b5aa"} USER ID (EMAIL)
+          %td{:style=>" color: #39b5aa"} SUBSCRIPTION
+          %td{:style=>" color: #39b5aa"} EXPIRY DATE
+          %td{:style=>" color: #39b5aa"} STATUS
+          %td{:style=>""}
+      %tbody
+      - @users.each do |user|
+        - if user.email == 'admin@admin.com'
+          - next
+        %tr
+          %td= user.fullname
+          %td= user.email
+          %td
+            - if user.subscription
+              - if  user.subscription.name == 'user'
+                = "Per user: #{user.subscription.total} users"
+              - else
+                = "Credit: #{user.subscription.used} / #{user.subscription.total}"
+          %td
+            - if user.subscription
+              = user.subscription.date_expired_at.to_formatted_s(:long)
+          %td 
+            - case user.is_active?
+            - when true
+              ACTIVE
+            - when false
+              DISABLED
+          %td
+            = link_to 'Enable / Disable',
+                  cancel_user_registration_path(user_id: user.id),
+                  class: "btn btn-sm btn-danger"
+            = link_to user_registration_path(user_id: user.id),
+              title: 'Delete User', 
+              'data-toggle' => 'tooltip', 'data-placement' => 'left',
+              :method => :delete, :data => { :confirm => 'Are you sure?' },
+              class: "btn btn-xs btn-danger tooltips" do
+              %i.icon-trash{:style => "color: white"}
+    %div{ align: "center" }
+      = will_paginate @users

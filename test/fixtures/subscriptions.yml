@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  type: 
+  total: 
+  date_expired_at: 2018-03-07
+
+two:
+  type: 
+  total: 
+  date_expired_at: 2018-03-07

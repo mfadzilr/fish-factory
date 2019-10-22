@@ -1,0 +1,26 @@
+%a.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
+  %i.icon-bell-alt
+  %span#notification_count.badge.bg-warning= current_user.unread_notifications.count != 0 ? current_user.unread_notifications.count : ''
+%ul.dropdown-menu.extended.notification
+  .notify-arrow.notify-arrow-yellow
+  %li
+    %p.yellow
+      - if current_user.unread_notifications.count != 0
+        You have #{current_user.unread_notifications.count} notifications
+      - else
+        No new notifications
+  - current_user.unread_notifications.each  do |notification|
+    %li{"data-created" => notification.created_at}
+      %a{:href => "#"}
+        %span.label.label-info{:style => "margin-right:5px"}
+          %i.icon-bell
+        %span= notification.note
+        %span.small.italic{:style => "float:right"}
+          = time_ago_in_words(notification.created_at)
+          ago
+    
+    
+  %li
+    %a#clearNotification{:href => "#"}
+      Clear all notifications
+      %i.icon-trash

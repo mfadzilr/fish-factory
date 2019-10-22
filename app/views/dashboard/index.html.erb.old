@@ -1,0 +1,57 @@
+            <!--state overview start-->
+              <div class="row state-overview">
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol blue"> <!-- terques -->
+                              <i class="icon-bullhorn"></i>
+                          </div>
+                          <div class="value">
+                              <h1 class="count">
+                                  <%= current_user.campaigns.count %>
+                              </h1>
+                              <p>Campaign</p>
+                          </div>
+                      </section>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol terques">
+                              <i class="icon-ok-circle"></i>
+                          </div>
+                          <div class="value">
+                              <h1 class=" count2">
+                                  <%= current_user.campaigns.joins(:responses).where('responses.status = ?', true).count %>
+                              </h1>
+                              <p>Success Delivery</p>
+                          </div>
+                      </section>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol red">
+                              <i class="icon-warning-sign"></i>
+                          </div>
+                          <div class="value">
+                              <h1 class=" count3">
+                                  <%= current_user.campaigns.joins(:responses).where('responses.status = ?', -1).count %>
+                              </h1>
+                              <p>Failed Delivery</p>
+                          </div>
+                      </section>
+                  </div>
+                  <div class="col-lg-3 col-sm-6">
+                      <section class="panel">
+                          <div class="symbol yellow">
+                              <i class="icon-male"></i>
+                          </div>
+                          <div class="value">
+                              <h1 class=" count4">
+                                  <%= Recipient.where(recipient_group_id: current_user.recipient_group_ids).count %>
+                              </h1>
+                              <p>Total Recipient</p>
+                          </div>
+                      </section>
+                  </div>
+              </div>
+
+              

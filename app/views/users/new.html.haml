@@ -1,0 +1,22 @@
+.panel.panel-info
+  .panel-heading
+    %h3 Add User
+  .panel-body
+    = form_for @user do |f|
+      .form-group
+        = f.label :email
+        = f.email_field :email, class: "form-control", style: "width:300px"
+      .form-group
+        = f.label :subscription
+        = f.select :date_expired_at, [["per_user", "Per User"], ["credit", "Credit"]], class: "form-control", style: "width:300px"
+      .form-group
+        = f.label :password
+        - if @minimum_password_length
+          %em
+            (#{@minimum_password_length} characters minimum)
+        = f.password_field :password, autocomplete: "off", class: "form-control", style: "width:300px"
+      .form-group
+        = f.label :password_confirmation
+        = f.password_field :password_confirmation, autocomplete: "off", class: "form-control", style: "width:300px"
+      .form-group
+        = f.submit "Create New User", class: "btn btn-primary"

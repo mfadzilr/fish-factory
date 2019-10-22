@@ -1,0 +1,16 @@
+= form_for @recipient_group, multipart: true do |f|
+  = render 'shared/errors', obj: @recipient_group
+
+  .form-group
+    = f.label :name
+    = f.text_field :name, class: "form-control", style: "width:300px"
+
+  .form-group
+    = f.label :description
+    = f.text_area :description, class: "form-control", rows: 4, style: "width:500px"
+
+  - if controller.action_name != 'edit'
+    .form-group
+      = f.file_field :data
+  .actions
+    = f.submit 'Save', class: "btn btn-primary"

@@ -1,0 +1,47 @@
+%section.panel
+  .panel-body.progress-panel
+    %div
+      %h1{ 'style' => 'font-size:30px'} ADD NEW USER
+      %p 
+
+    .row.clear-fix
+      
+      .col-lg-6
+        
+        - resource.build_subscription if resource.subscription.nil?
+        = form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
+          = devise_error_messages!
+          .form-group
+            = f.label :Name
+            = f.text_field :fullname, class: "form-control", style: ""
+          .form-group
+            = f.label :email
+            = f.email_field :email, class: "form-control", style: ""
+          .form-group
+            = f.label :password
+            - if @minimum_password_length
+              %em
+                (#{@minimum_password_length} characters minimum)
+            = f.password_field :password, autocomplete: "off", class: "form-control", style: ""
+          .form-group
+            = f.label :password_confirmation
+            = f.password_field :password_confirmation, autocomplete: "off", class: "form-control", style: ""
+          
+          = f.fields_for :subscription do | s |
+            .form-group
+              = s.label :Subcription
+              = select_tag "user[subscription_attributes][name]", options_for_select([["- Please Select -",""], [ "Per User", "user"], [ "Credit", "credit"]]), class: "form-control", required: true
+              
+              
+            .form-group
+              = s.label :Total
+              = s.text_field :total, class: "form-control", style: ""
+            .form-group
+              = s.label :Expiry_date
+              .input-group.date.form_datetime-component
+                = s.text_field :date_expired_at, class: "form-control", style: ""
+                %span.input-group-btn
+                  %button.btn.btn-danger.date-set
+                    %i.icon-calendar
+          .form-group
+            = f.submit "Create New User", class: "btn btn-primary"

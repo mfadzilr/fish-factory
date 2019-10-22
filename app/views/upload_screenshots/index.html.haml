@@ -1,0 +1,23 @@
+%h1 Listing upload_screenshots
+
+%table.table
+  %thead
+    %tr
+      %th Origin
+      %th Filename
+      %th Size
+      %th{ colpsan: 3 }
+
+  %tbody
+    - @upload_screenshots.each do |upload_screenshot|
+      %tr
+        %td= upload_screenshot.origin
+        %td= upload_screenshot.image_file_name
+        %td= upload_screenshot.image_file_size
+        %td= link_to 'Show', upload_screenshot
+        %td= link_to 'Edit', edit_upload_screenshot_path(upload_screenshot)
+        %td= link_to 'Delete', upload_screenshot, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Upload screenshot', new_upload_screenshot_path

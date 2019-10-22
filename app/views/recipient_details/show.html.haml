@@ -1,0 +1,15 @@
+.panel.panel-info
+  .panel-heading
+    %h4 Data Details
+  .panel-body
+    %table.table.table-striped
+      %thead
+        %tr
+          %th Parameter
+          %th Value
+      %tbody
+      - @user_data =  JSON.parse(@recipient_detail.data)
+      - @user_data.each do |k,v|
+        %tr
+          %td= k
+          %td= v

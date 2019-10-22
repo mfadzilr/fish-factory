@@ -1,0 +1,9 @@
+%p#notice= notice
+
+%p
+  %b Origin:
+  = @upload_screenshot.origin
+
+= link_to 'Edit', edit_upload_screenshot_path(@upload_screenshot)
+\|
+= link_to 'Back', upload_screenshots_path

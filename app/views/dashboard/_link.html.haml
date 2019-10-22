@@ -1,0 +1,25 @@
+= link_to campaign, title: 'View Result', 
+  'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 
+  class: "btn btn-xs btn-white tooltips hide hide" do
+  %i.icon-bar-chart{:style => "color: #8075c4"}
+  
+= link_to stop_campaign_path(campaign), method: :post,  title: 'Stop campaign',
+  class: "btn btn-xs btn-white tooltips hide",
+  'data-toggle' => 'tooltip', 'data-placement' => 'bottom' do
+  %i.icon-minus-sign{:style => "color: #fcb322"}
+
+= link_to start_campaign_path(campaign), method: :post, title: 'Launch campaign', 
+  class: "btn btn-xs btn-white tooltips hide",
+  'data-toggle' => 'tooltip', 'data-placement' => 'bottom' do
+  %i.icon-rocket{:style => "color: #fcb322"}
+
+= link_to edit_campaign_path(campaign), title: 'Edit campaign',
+  'data-toggle' => 'tooltip', 'data-placement' => 'bottom',
+  class: "btn btn-xs btn-white tooltips hide" do
+  %i.icon-edit{:style => "color: #61a642"}
+
+= link_to campaign, title: 'Delete campaign', 
+  'data-toggle' => 'tooltip', 'data-placement' => 'bottom',
+  :method => :delete, :data => { :confirm => 'Are you sure?' },
+  class: "btn btn-xs btn-danger tooltips hide" do
+  %i.icon-trash{:style => "color: white"}

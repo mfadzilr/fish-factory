@@ -1,0 +1,140 @@
+
+                     
+                            <% flash.each do |key, value| %>
+                              <div class="alert alert-<%= key == 'notice' ? 'success' : key %> alert-block fade in"> 
+                                <button data-dismiss="alert" class="close close-sm" type="button">
+                                      <i class="icon-remove"></i>
+                                  </button>
+                                    <%= value %>
+                              </div>
+                            <% end %>
+                          
+                        
+                      <section class="panel">
+                          
+                          <div class="panel-body progress-panel">
+                            <div class="task-progress">
+                              <h1 style='font-size:30px'>SEND PROFILE</h1>
+                              <p>LIST OF SEND PROFILE CONFIGURATION</p>
+                            </div>
+
+                             <div class="task-option">
+                              <a class="btn btn-default btn-shadow tooltips" 
+                                      data-placement="left" 
+                                      data-title="Create new send profile" 
+                                      data-toggle="cmodal" 
+                                      data-target="#newSendProfileModal"
+                                      href="#newSendProfileModal"
+                                      data-href="<%= send_profiles_new_modal_path %>">
+                                        New Profile
+                                  </a>
+                             </div>
+                          <table class="table table-hover personal-task">
+                              <thead>
+                              <tr style="border-bottom: 1px;">
+                                  <th style="border-bottom: 1px;font-weight: normal; width: 20%; color: #39b5aa">PROFILE NAME</th>
+                                  <th style="border-bottom: 1px;font-weight: normal; width: 30%; color: #39b5aa">MAIL SERVER</th>
+                                  <th style="border-bottom: 1px;font-weight: normal; width: 30%; color: #39b5aa">USERNAME</th>
+                                  <th style="border-bottom: 1px;"></th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                            <% if @send_profiles.count == 0 %>
+                              <tr>
+                                <td colspan='4' style='text-align: center; font-weight: 300; font-size: 50px; color: lightgrey;padding-top: 40px;padding-bottom:40px'>
+                                  <i class='icon-info-sign' style='font-size: 50px; color: lightgrey'></i>
+                                  You don't have any send profile
+                                </td>
+                              </tr>
+                            <% end %>
+                            <% @send_profiles.each do |send_profile| %>
+                            <tr>
+                              <td><%= send_profile.title %></td>
+                              <td><%= "#{send_profile.address}:#{send_profile.port}" %></td>
+                              <td><%= send_profile.user_name %></td>
+                              <td><a class="btn btn-xs btn-white tooltips" 
+                                      data-placement="bottom" 
+                                      data-title="View Profile" 
+                                      data-toggle="cmodal" 
+                                      data-target="#viewSendProfileModal"
+                                      href="#viewSendProfileModal"
+                                      data-href="<%= show_modal_send_profile_path(send_profile) %>">
+                                        <i class="icon-eye-open" style="color: #8075c4"></i> 
+                                  </a>
+                                  <a class="btn btn-xs btn-white tooltips" 
+                                      data-placement="bottom" 
+                                      data-title="Edit Profile" 
+                                      data-toggle="cmodal" 
+                                      data-target="#editSendProfileModal"
+                                      href="#editSendProfileModal"
+                                      data-href="<%= edit_modal_send_profile_path(send_profile) %>">
+                                        <i class="icon-edit" style="color: #61a642"></i> 
+                                  </a>
+                                    
+                                    <%= link_to send_profile, title: 'Delete profile', 
+                                        'data-toggle' => 'tooltip', 'data-placement' => 'bottom',
+                                        :method => :delete, :data => { :confirm => 'Are you sure?' },
+                                        class: "btn btn-xs btn-danger tooltips" do %>
+                                      <i class="icon-trash" style="color: white"></i>
+                                    <% end %>
+                               </td>
+                            </tr>
+                            <% end %>
+                              </tbody>
+                          </table>
+                        </div>
+                      </section>
+                      <div class="modal fade" id="viewSendProfileModal" tabindex="-1" role="dialog" aria-labelledby="viewSendProfileModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                      <h4 class="modal-title"> <i class="icon-fighter-jet" style="color: #FF6C60; font-size: 26px; padding-right: 10px"></i> View Send Profile</h4>
+                                  </div>
+                                  <div class="modal-body">
+
+                                      Loading...
+
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+                                     
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="modal fade" id="editSendProfileModal" tabindex="-1" role="dialog" aria-labelledby="editSendProfileModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                      <h4 class="modal-title"> <i class="icon-fighter-jet" style="color: #FF6C60; font-size: 26px; padding-right: 10px"></i> Edit Send Profile</h4>
+                                  </div>
+                                  <div id="testTarget" class="modal-body">
+
+                                      Loading...
+
+                                  </div>
+                                  
+                                  
+                              </div>
+                          </div>
+                      </div>
+                      <div class="modal fade" id="newSendProfileModal" tabindex="-1" role="dialog" aria-labelledby="newSendProfileModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                      <h4 class="modal-title"> <i class="icon-fighter-jet" style="color: #FF6C60; font-size: 26px; padding-right: 10px"></i> New Send Profile</h4>
+                                  </div>
+                                  <div class="modal-body">
+
+                                      Loading...
+
+                                  </div>
+                                  
+                                  
+                              </div>
+                          </div>
+                      </div>
+        

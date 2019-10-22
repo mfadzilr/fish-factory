@@ -1,0 +1,33 @@
+= form_for @site_page do |f|
+  = render 'shared/errors', obj: @site_page
+
+  .form-group
+    = f.label :title
+    = f.text_field :title, class: "form-control"
+
+  .form-group
+    = f.label :description
+    = f.text_field :description, class: "form-control"
+
+  - if action_name != 'edit'
+    .form-group
+      = f.label 'Target URL'
+      .form-inline
+        = f.text_field :target_url, class: "form-control", placeholder: 'e.g. http://www.google.com', style: "width:400px"
+        = f.submit 'Copy Site', class: "btn btn-danger"
+
+  .form-group
+    = f.label(:content)
+    ~ f.text_area :content, class: "form-control ckeditor", rows: 20
+    -# = f.text_area :content, :data => { provider: 'summernote' }
+
+  - if current_user.admin?
+    .form-group.form-inline
+      = f.label :is_private
+      = f.check_box :is_private
+
+  .form-group
+    = f.submit 'Save', class: "btn btn-primary"
+    - if !@site_page.title.nil?
+      = link_to 'Show', @site_page, target: '_blank', class: "btn btn-primary"
+    = link_to 'Back', site_pages_path, class: "btn btn-primary"

@@ -1,0 +1,86 @@
+- flash.each do |key, value|
+  - case key
+  - when 'notice'
+    - @key = 'info'
+    - @sign = 'icon-info-sign'
+  - when 'error'
+    - @key = 'danger'
+    - @sign = 'icon-warning-sign'
+  - else
+    - @key = key
+    - @sign = 'icon-ok-sign'
+  %div{class: "alert alert-#{@key} alert-block fade in"}
+    %button.close.close-sm{"data-dismiss" => "alert", type: "button"}
+      %i.icon-remove
+    %h4
+      %i{class: @sign}
+      = key.sub(/^(\w)/) {|s| s.capitalize}
+    %p= value
+%section.panel
+  .panel-body.progress-panel
+    .task-progress
+      %h1{:style => "font-size:30px"} SEND PROFILE
+      %p LIST OF SEND PROFILE CONFIGURATION
+    .task-option
+      %a.btn.btn-default.btn-shadow.tooltips{"data-href" => send_profiles_new_modal_path, "data-placement" => "left", "data-target" => "#newSendProfileModal", "data-title" => "Create new send profile", "data-toggle" => "cmodal", :href => "#newSendProfileModal"}
+        New Profile
+    %table.table.table-hover.personal-task
+      %thead
+        %tr{:style => "border-bottom: 1px;"}
+          %th{:style => "border-bottom: 1px;font-weight: normal; width: 20%; color: #39b5aa"} PROFILE NAME
+          %th{:style => "border-bottom: 1px;font-weight: normal; width: 30%; color: #39b5aa"} MAIL SERVER
+          %th{:style => "border-bottom: 1px;font-weight: normal; width: 30%; color: #39b5aa"} USERNAME
+          %th{:style => "border-bottom: 1px;"}
+      %tbody
+        - if @send_profiles.count == 0
+          %tr
+            %td{:colspan => "4", :style => "text-align: center; font-weight: 300; font-size: 50px; color: lightgrey;padding-top: 40px;padding-bottom:40px"}
+              %i.icon-info-sign{:style => "font-size: 50px; color: lightgrey"}
+              You don't have any send profile
+        - @send_profiles.each do |send_profile|
+          %tr
+            %td= send_profile.title
+            %td= "#{send_profile.address}:#{send_profile.port}"
+            %td= send_profile.user_name
+            %td
+              %a.btn.btn-xs.btn-white.tooltips{"data-href" => show_modal_send_profile_path(send_profile), "data-placement" => "bottom", "data-target" => "#viewSendProfileModal", "data-title" => "View Profile", "data-toggle" => "cmodal", :href => "#viewSendProfileModal"}
+                %i.icon-eye-open{:style => "color: #8075c4"}
+              %a.btn.btn-xs.btn-white.tooltips{"data-href" => edit_modal_send_profile_path(send_profile), "data-placement" => "bottom", "data-target" => "#editSendProfileModal", "data-title" => "Edit Profile", "data-toggle" => "cmodal", :href => "#editSendProfileModal"}
+                %i.icon-edit{:style => "color: #61a642"}
+              = link_to send_profile, title: 'Delete profile',                |
+                'data-toggle' => 'tooltip', 'data-placement' => 'bottom',     |
+                :method => :delete, :data => { :confirm => 'Are you sure?' }, |
+                class: "btn btn-xs btn-danger tooltips" do                    |
+                %i.icon-trash{:style => "color: white"}
+#viewSendProfileModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "viewSendProfileModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
+        %h4.modal-title
+          %i.icon-fighter-jet{:style => "color: #FF6C60; font-size: 26px; padding-right: 10px"}
+          View Send Profile
+      .modal-body
+        Loading...
+      .modal-footer
+        %button.btn.btn-default{"data-dismiss" => "modal", :type => "button"} Close
+#editSendProfileModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "editSendProfileModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
+        %h4.modal-title
+          %i.icon-fighter-jet{:style => "color: #FF6C60; font-size: 26px; padding-right: 10px"}
+          Edit Send Profile
+      #testTarget.modal-body
+        Loading...
+#newSendProfileModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "newSendProfileModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", :type => "button"} ×
+        %h4.modal-title
+          %i.icon-fighter-jet{:style => "color: #FF6C60; font-size: 26px; padding-right: 10px"}
+          New Send Profile
+      .modal-body
+        Loading...

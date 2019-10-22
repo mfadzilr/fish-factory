@@ -1,0 +1,81 @@
+- flash.each do |key, value|
+  - case key
+  - when 'notice'
+    - @key = 'info'
+    - @sign = 'icon-info-sign'
+  - when 'error'
+    - @key = 'danger'
+    - @sign = 'icon-warning-sign'
+  - else
+    - @key = key
+    - @sign = 'icon-ok-sign'
+  %div{class: "alert alert-#{@key} alert-block fade in"}
+    %button.close.close-sm{"data-dismiss" => "alert", type: "button"}
+      %i.icon-remove
+    %h4
+      %i{class: @sign}
+      = key.sub(/^(\w)/) {|s| s.capitalize}
+    %p= value
+%section.panel
+  .panel-body.progress-panel
+    .task-progress
+      %h1{ 'style' => 'font-size:30px'} CAMPAIGN REPORTS
+      %p LIST OF CAMPAIGN REPORT
+    .task-option
+      %a.btn.btn-default.btn-shadow.tooltips{"data-href" => reports_new_modal_path, "data-placement" => "left", "data-target" => "#newModal", "data-title" => "Create New Report", "data-toggle" => "cmodal", href: "#newModal"}
+        Create New Report
+
+    - if @reports.count == 0 
+      %table.table.table-hover.personal-task
+        %tr
+          %td{colspan: '5', style: 'border:none; text-align: center; font-weight:300; font-size: 50px; color: lightgrey;padding-top: 40px;padding-bottom:40px'} 
+            %i.icon-info-sign{style: 'font-size: 50px; color: lightgrey'}
+            You don't have any report
+    - else 
+      %table.table.table-hover.personal-task
+        %thead
+          %tr
+            %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"} REPORT
+            %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"} DATE CREATED
+            %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"}
+        %tbody
+          - @reports.each do |report|
+            %tr
+              %td= report.title
+              %td= report.created_at.strftime("%e %b %Y %I:%M %p")
+              %td{ align: 'right' }
+                = link_to report, title: 'View Report', 
+                  'data-toggle' => 'tooltip', 'data-placement' => 'bottom', 
+                  class: "btn btn-xs btn-white tooltips" do
+                  %i.icon-eye-open{style: "color: #61a642"}
+                %a.btn.btn-xs.btn-white.tooltips{"data-href" => edit_modal_report_path(report), "data-target" => "#editModal", "data-toggle" => "cmodal", "data-placement" => "bottom", "data-title" => "Edit Report", href: "#editModal"}
+                  %i.icon-edit{style: "color: #61a642"}
+                = link_to report,
+                  title: 'Delete', 
+                  'data-toggle' => 'tooltip', 'data-placement' => 'bottom',
+                  :method => :delete, :data => { :confirm => 'Are you sure?' },
+                  class: "btn btn-xs btn-danger tooltips" do
+                  %i.icon-trash{:style => "color: white"}
+      %div{ align: "center" }
+        = will_paginate @reports
+
+#editModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "editModalLabel", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+        %h4.modal-title
+          %i.icon-file{style: "color: #FF6C60; font-size: 26px; padding-right: 10px"}
+          Edit Report
+      #testTarget.modal-body
+        Loading...
+#newModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "newModalLabel", role: "dialog", tabindex: "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+        %h4.modal-title
+          %i.icon-file{style: "color: #FF6C60; font-size: 26px; padding-right: 10px"}
+          Create New Report
+      #testTarget.modal-body
+        Loading...

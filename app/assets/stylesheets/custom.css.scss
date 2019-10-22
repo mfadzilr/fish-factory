@@ -1,0 +1,124 @@
+@import "bootstrap-sprockets";
+@import "bootstrap";
+@import "summernote";
+@import 'bootstrap-datetimepicker';
+@import "font-awesome";
+
+body {
+  background: #dedede;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  line-height: 1.42857;
+}
+
+.fa {
+  display: inline-block;
+  margin-right: 1em;
+}
+//
+// .font-sm {
+//   font-size: 1em;
+// }
+//
+// .row {
+//   margin-bottom: 5px;
+// }
+//
+// .bgcolor-grey {
+//   background: #bfbfbf;
+//   padding: 5px;
+// }
+//
+.th-bgcolor-red {
+  background: #cc0a0f;
+  color: #fff;
+}
+//
+.icon-font-lg {
+  font-size: 3em;
+}
+
+.vertical-middle {
+  height:35px;
+  display:table-cell !important;
+  vertical-align:middle;
+}
+//
+// li {
+//   font-size: 0.9em;
+// }
+//
+// table {
+//   font-size: 0.95em;
+//   padding: 0px;
+//   margin-bottom: 5px;
+//   border: 0px;
+// }
+//
+.pagination {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border: 5px;
+}
+//
+.navbar {
+  margin-bottom: 0px;
+  border: 0px;
+}
+
+.circle-red {
+  background: red;
+}
+
+.circle-green {
+  background: green;
+}
+
+.circle {
+	// background: green;
+	border-radius:50%;
+	// color: white;
+	display:table;
+	height: 15px;
+	// font-weight: bold;
+	// font-size: 3.2em;
+	width: auto;
+	margin:0 auto;
+}
+.circle span {
+	display:table-cell;
+	vertical-align:middle;
+	height:15px;
+	width:15px;
+	// text-align:center;
+	// padding: 0 5px;
+}
+//
+// .text-center {
+//   text-align: center;
+// }
+//
+// .text-right {
+//   text-align: right;
+// }
+//
+// .panel {
+//   padding: 3px;
+//   margin: 0px;
+// }
+//
+// .panel-rounded {
+//   border-radius:10px;
+//   padding: 5px;
+// }
+//
+// .btn {
+//   font-size: 0.9em;
+// }
+//
+// .badge-notify{
+//    background:red;
+//    position:relative;
+//    top: -20px;
+//    left: -35px;
+// }

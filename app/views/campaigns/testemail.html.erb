@@ -1,0 +1,33 @@
+<form id="testemaiform" class="form-horizontal tasi-form async" enctype="multipart/form-data" action="<%= campaigns_testemailnow_path %>" accept-charset="UTF-8" method="post">
+  <input name="utf8" type="hidden" value="&#x2713;" />
+  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+  <input id="testemail_sender_name" name="campaign[sender_name]" type="hidden" value="" />
+  <input id="testemail_sender_email" name="campaign[sender_email]" type="hidden" value="" />
+  <input id="testemail_send_profile_id" name="campaign[send_profile_id]" type="hidden" value="" />
+            <div class="alert alert-warning alert-block fade in hidden">
+              <h4>
+                  <i class="icon-ko-sign"></i>
+                  Error
+              </h4>
+              <ul id="message"></ul>
+          </div>
+          <div class="alert alert-info alert-block fade in hidden">
+              <h4>
+                  <i class="icon-ok-sign"></i>
+                  Success
+              </h4>
+              <p id="message-info"></p>
+          </div>
+          <p> Please enter your email address </p>
+          <hr>
+            <div class="form-group" style="border-bottom:none">
+                <label class="col-lg-4 col-sm-4 control-label lightgrey">EMAIL ADDRESS *</label>
+                <div class="col-lg-8">
+                    <input class="form-control" type="email" name="campaign[email]" required="" />
+                </div>
+            </div>
+           
+        <div class="modal-footer">
+          <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+          <button class="btn btn-success" type="submit"><i class="icon-refresh icon-spin hidden" style="margin-right: 10px"></i> Send </button>
+</form>

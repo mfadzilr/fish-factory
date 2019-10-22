@@ -1,0 +1,104 @@
+.col-lg-12
+  - flash.each do |key, value|
+    - case key
+    - when 'notice'
+      - @key = 'info'
+      - @sign = 'icon-info-sign'
+    - when 'error'
+      - @key = 'danger'
+      - @sign = 'icon-warning-sign'
+    - else
+      - @key = key
+      - @sign = 'icon-ok-sign'
+    %div{class: "alert alert-#{@key} alert-block fade in"}
+      %button.close.close-sm{"data-dismiss" => "alert", type: "button"}
+        %i.icon-remove
+      %h4
+        %i{class: @sign}
+        = key.sub(/^(\w)/) {|s| s.capitalize}
+      %p= value
+- if @campaigns.count == 0
+    
+  .form-signin{style: 'max-width : 450px;background-color: #f1f2f7;'}
+    %img{:src => "img/phishing.png", style: 'width: 500px'}
+    %h1{style: 'background-color: #f1f2f7; font-weight: 300'} 
+      Howdy! Let's go phishing. Start a new campaign
+      = link_to 'here', new_campaign_path
+      - if Recipient.where(recipient_group_id: current_user.recipient_group_ids).count == 0
+        But first, add your targets to Recipient Group
+        %a.tooltips{"data-href" => recipient_groups_new_modal_path, "data-placement" => "right", "data-target" => "#newModal", "data-title" => "Create new recipient group", "data-toggle" => "cmodal", href: "#newModal"} here
+  #newModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "newModalLabel", role: "dialog", tabindex: "-1"}
+    .modal-dialog
+      .modal-content
+        .modal-header
+          %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+          %h4.modal-title
+            %i.icon-group{style: "color: #FF6C60; font-size: 26px; padding-right: 10px"}
+            New Recipient Group
+        #testTarget.modal-body
+          Loading...
+- else
+  .col-lg-12
+    .row.state-overview
+      .col-lg-3.col-sm-6
+        %section.panel
+          = link_to campaigns_path do 
+            .symbol.blue
+              / terques
+              %i.icon-bullhorn
+            .value
+              %h1.count
+                = current_user.campaigns.count
+              %p Campaign
+      .col-lg-3.col-sm-6
+        %section.panel
+          .symbol.terques
+            %i.icon-ok-circle
+          .value
+            %h1.count2
+              = current_user.campaigns.joins(:responses).where('responses.status = ?', true).count
+            %p Success Delivery
+      .col-lg-3.col-sm-6
+        %section.panel
+          .symbol.red
+            %i.icon-warning-sign
+          .value
+            %h1.count3
+              = current_user.campaigns.joins(:responses).where('responses.status = ?', -1).count
+            %p Failed Delivery
+      .col-lg-3.col-sm-6
+        %section.panel
+          = link_to recipient_groups_path do 
+            .symbol.yellow
+              %i.icon-male
+            .value
+              %h1.count4
+                = Recipient.where(recipient_group_id: current_user.recipient_group_ids).count
+              %p Total Recipient
+    .panel
+      .panel-body
+        .row
+          .col-lg-3
+            .bio-desk
+              %h4.terques 
+                %a{"href" => "#"} ThemeForest CMS
+              %p Started : 15 July
+              %p Deadline : 15
+          .col-lg-3 
+            %table{"width" => "100%"}
+              %tr
+                %td{"style" =>"align-items:center"}
+                  %center
+                    .bio-chart
+                      %input.knob{"data-bgcolor" => "#e8e8e8", "data-width" => "80%", "data-angleOffset" => "-125", "data-readOnly" => "true", "data-angleArc" => "250", "data-displayprevious" => "true", "data-fgcolor" => "#57c8f2", "data-height" => "101", "data-thickness" => ".3", "data-width" => "101", :value => "63"}/
+                
+              %tr
+                %td           
+                  %center
+                    test
+          .col-lg-3 
+            .bio-chart
+              %input.knob{"data-bgcolor" => "#e8e8e8", "data-displayprevious" => "true", "data-fgcolor" => "#4CC5CD", "data-height" => "101", "data-thickness" => ".2", "data-width" => "101", :value => "63"}/
+          .col-lg-3 
+            .bio-chart
+              %input.knob{"data-bgcolor" => "#e8e8e8", "data-displayprevious" => "true", "data-fgcolor" => "#4CC5CD", "data-height" => "101", "data-thickness" => ".2", "data-width" => "101", :value => "63"}/

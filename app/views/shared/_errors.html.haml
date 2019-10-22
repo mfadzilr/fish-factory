@@ -1,0 +1,7 @@
+- if obj.errors.any?
+  .alert.alert-danger
+    #error_explanation
+      %h4= "#{pluralize(obj.errors.count, "error")}:"
+      %ul
+        - obj.errors.full_messages.each do |msg|
+          %li= msg

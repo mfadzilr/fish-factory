@@ -1,0 +1,135 @@
+- flash.each do |key, value|
+  - case key
+  - when 'notice'
+    - @key = 'info'
+    - @sign = 'icon-info-sign'
+  - when 'error'
+    - @key = 'danger'
+    - @sign = 'icon-warning-sign'
+  - else
+    - @key = key
+    - @sign = 'icon-ok-sign'
+  %div{class: "alert alert-#{@key} alert-block fade in"}
+    %button.close.close-sm{"data-dismiss" => "alert", type: "button"}
+      %i.icon-remove
+    %h4
+      %i{class: @sign}
+      = key.sub(/^(\w)/) {|s| s.capitalize}
+    %p= value
+%section.panel
+  .panel-body.progress-panel
+    .task-progress
+      %h1{ 'style' => 'font-size:30px'} EMAIL TEMPLATES
+      %p LIST OF EMAIL TEMPLATES
+    .task-option
+      %a.btn.btn-default.btn-shadow.tooltips{"data-href" => email_templates_new_modal_path, "data-placement" => "left", "data-target" => "#newModal", "data-title" => "Create New Template", "data-toggle" => "cmodal", href: "#newModal"}
+        Create New Template
+  .row{:style => "margin: 15px 15px 15px 0px"}
+    .col-lg-12
+      %ul.nav.nav-tabs
+        %li.active
+          = link_to '#my', data: { toggle: 'tab' } do
+            My Templates
+        %li
+          = link_to '#public', data: { toggle: 'tab' } do
+            Available Templates
+
+      .tab-content{ style: "margin-top:20px" }
+        #my.tab-pane.fade.in.active
+          - if @email_templates.count == 0 
+            %table.table.table-hover.personal-task
+              %tr
+                %td{colspan: '5', style: 'border:none; text-align: center; font-weight:300; font-size: 50px; color: lightgrey;padding-top: 40px;padding-bottom:40px'} 
+                  %i.icon-info-sign{style: 'font-size: 50px; color: lightgrey'}
+                  You don't have any email template
+          - else 
+            %table.table.table-hover.personal-task
+              %thead
+                %tr
+                  %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"} TEMPLATE TITLE
+                  %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"} DESCRIPTION
+                  %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"} STATUS
+                  %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"}
+              %tbody
+                - @email_templates.each do |email_template|
+                  %tr
+                    %td= email_template.title
+                    %td= email_template.description
+                    %td= email_template.is_private ? 'PRIVATE' : 'PUBLIC'
+                    %td{ align: 'right' }
+                      /= link_to 'Show', recipient_group
+                      %a.btn.btn-xs.btn-white.tooltips{"target" =>"_preview", "data-placement" => "bottom", "data-title" => "Preview Email Template", href: email_template_path(email_template)}
+                        %i.icon-eye-open{style: "color: #61a642"}
+
+                      %a.btn.btn-xs.btn-white.tooltips{"data-href" => edit_modal_email_template_path(email_template), "data-placement" => "bottom", "data-target" => "#editModal", "data-title" => "Edit Template", "data-toggle" => "cmodal", href: "#editModal"}
+                        %i.icon-edit{style: "color: #61a642"}
+                      = link_to email_template,
+                        title: 'Delete', 
+                        'data-toggle' => 'tooltip', 'data-placement' => 'bottom',
+                        :method => :delete, :data => { :confirm => 'Are you sure?' },
+                        class: "btn btn-xs btn-danger tooltips" do
+                        %i.icon-trash{:style => "color: white"}
+
+            %div{ align: "center" }
+              = will_paginate @email_templates
+        #public.tab-pane.fade.in
+          %table.table.table-hover.personal-task
+            %thead
+              %tr
+                %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"} TEMPLATE TITLE
+                %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"} DESCRIPTION
+                %th{:style=>"border-bottom: 1px;font-weight: normal;width: 20%; color: #39b5aa"}
+            %tbody
+              - if @public_templates.count == 0 
+                %tr
+                  %td{colspan: '5', style: 'text-align: center; font-weight:300; font-size: 50px; color: lightgrey;padding-top: 40px;padding-bottom:40px'} 
+                    %i.icon-info-sign{style: 'font-size: 50px; color: lightgrey'}
+                    Currently, there is no available templates 
+              - else
+                - @public_templates.each do |email_template|
+                  %tr
+                    %td= email_template.title
+                    %td= email_template.description
+                    %td{ align: 'right' }
+                      /= link_to 'Show', recipient_group
+                      %a.btn.btn-xs.btn-white.tooltips{"target" =>"_preview", "data-placement" => "bottom", "data-title" => "Preview Email Template", href: email_template_path(email_template)}
+                        %i.icon-eye-open{style: "color: #61a642"}
+
+                      %a.btn.btn-xs.btn-white.tooltips{"data-placement" => "bottom", "data-title" => "Copy Template", href: copy_email_template_path(email_template)}
+                        %i.icon-copy{style: "color: #57c8f2"}
+                      
+
+          %div{ align: "center" }
+            = will_paginate @public_templates
+
+    #showModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "showModalLabel", role: "dialog", tabindex: "-1"}
+      .modal-dialog{ style: "width:768px"}
+        .modal-content
+          .modal-header
+            %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+            %h4.modal-title
+              %i.icon-file{style: "color: #FF6C60; font-size: 26px; padding-right: 10px"}
+              View Template
+          #testTarget.modal-body
+            Loading...
+      }
+    #editModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "editModalLabel", role: "dialog", tabindex: "-1"}
+      .modal-dialog{ style: "width:95%;height:80%"}
+        .modal-content
+          .modal-header
+            %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+            %h4.modal-title
+              %i.icon-file{style: "color: #FF6C60; font-size: 26px; padding-right: 10px"}
+              Edit Email Template
+          #testTarget.modal-body
+            Loading...
+    #newModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "newModalLabel", role: "dialog", tabindex: "-1"}
+      .modal-dialog{ style: "width:95%;height:80%"}
+        .modal-content
+          .modal-header
+            %button.close{"aria-hidden" => "true", "data-dismiss" => "modal", type: "button"} ×
+            %h4.modal-title
+              %i.icon-file{style: "color: #FF6C60; font-size: 26px; padding-right: 10px"}
+              Create New Template
+          #testTarget.modal-body
+            Loading...

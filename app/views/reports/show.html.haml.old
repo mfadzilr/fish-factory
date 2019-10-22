@@ -1,0 +1,124 @@
+.panel.panel-info
+  .panel-heading
+    %h3 Campaign Report: #{@report.title}
+  .panel-body
+
+    .panel.panel-default
+      .panel-heading
+        %strong
+          %span.fa.fa-area-chart{aria_hidden: "true"}
+          Recipient Activity Status
+      .panel-body
+        .row
+          .col-md-4
+            %table.table
+              %thead
+                %tr
+                  %th Campaign
+                  %th.text-center
+                    .pull-right
+                      *Email Send
+              %tbody
+                - @report.campaigns.each do |campaign|
+                  %tr
+                    %td= campaign.title
+                    %td.text-center
+                      .pull-right
+                        = Response.where(campaign_id: campaign.id).count
+          .col-md-8
+            %table.table
+              %thead
+                %tr
+                  %th Action Type
+                  %th.text-center
+                    .pull-right
+                      Recipient
+              %tbody
+                %tr
+                  %td
+                    %span.fa.fa-file-image-o{aria_hidden: "true"}
+                    Users had enabled image loading in their email clients
+                  %td.text-center
+                    .pull-right
+                      = link_to RecipientDetail.where(campaign_id: @report.report_sources.pluck(:campaign_id)).where(request_type: 1).distinct.count('recipient_id'),
+                        export_report_path(@report.id, format: :xlsx, type: 1)
+                %tr
+                  %td
+                    %span.fa.fa-external-link{aria_hidden: "true"}
+                    Users browsed the phishing page
+                  %td.text-center
+                    .pull-right
+                      = link_to RecipientDetail.where(campaign_id: @report.report_sources.pluck(:campaign_id)).where(request_type: 2).distinct.count('recipient_id'),
+                        export_report_path(@report.id, format: :xlsx, type: 2)
+                %tr
+                  %td
+                    %span.fa.fa-user-secret{aria_hidden: "true"}
+                    Users posted their credential at the phishing page
+                  %td.text-center
+                    .pull-right
+                      = link_to RecipientDetail.where(campaign_id: @report.report_sources.pluck(:campaign_id)).where(request_type: 3).distinct.count('recipient_id'),
+                        export_report_path(@report.id, format: :xlsx, type: 1)
+        %i.small *Total email sent include sending retries
+
+    .row
+      .col-md-12
+        .panel.panel-default
+          .panel-heading
+            %strong
+              %span.fa.fa-clock-o{aria_hidden: "true"}
+              All Event Activity -
+              %span.label.label-primary Opened
+              %span.label.label-warning Clicked
+              %span.label.label-danger Posted
+          .panel-body
+            = render partial: 'widgets/timeline', locals: { obj: @report }
+
+    .row
+      .col-md-6
+        .panel.panel-default
+          .panel-heading
+            %strong
+              %span.fa.fa-chrome{aria_hidden: "true"}
+              User Agent
+          .panel-body
+            = render partial: 'widgets/user_agent', locals: { obj: @report }
+            %table.table
+              %thead
+                %tr
+                  %th User Agent
+                  %th.text-center
+                    .pull-right
+                      Request Count
+              %tbody
+                - user_agents = RecipientDetail.where(campaign_id: @report.campaigns.ids).group(:user_agent).count
+                - user_agents.each do |user_agent|
+                  %tr
+                    %td= user_agent[0]
+                    %td.text-center
+                      .pull-right
+                        = user_agent[1]
+      .col-md-6
+        .panel.panel-default
+          .panel-heading
+            %strong
+              %span.fa.fa-desktop{aria_hidden: "true"}
+              Unique IP Address
+          .panel-body
+            %table.table
+              %thead
+                %tr
+                  %th IP Address
+                  %th.text-center
+                    .pull-right
+                      Request Count
+              %tbody
+                - ip_addresses = RecipientDetail.where(campaign_id: @report.campaigns.ids).group(:ip_address).count
+                - ip_addresses.each do |ip_address|
+                  %tr
+                    %td= ip_address[0]
+                    %td.text-center
+                      .pull-right
+                        = ip_address[1]
+
+    = link_to 'Edit', edit_report_path(@report), class: "btn btn-primary"
+    = link_to 'Back', reports_path, class: "btn btn-primary"

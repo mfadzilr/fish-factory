@@ -1,0 +1,20 @@
+= form_for @attachment_file, multipart: true do |f|
+  - if @attachment_file.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@attachment_file.errors.count, "error")} prohibited this attachment_file from being saved:"
+      %ul
+        - @attachment_file.errors.full_messages.each do |msg|
+          %li= msg
+
+  .form-group
+    = f.label('File name with extension')
+    = f.text_field :name, class: "form-control"
+  .form-group
+    = f.label :description
+    = f.text_field :description, class: "form-control"
+  .form-group
+    = f.label :payload
+    = f.file_field :payload, class: "form-control"
+  .actions
+    = f.submit 'Save', class: "btn btn-primary"
+    = link_to 'Back', attachment_files_path, class: "btn btn-primary"
